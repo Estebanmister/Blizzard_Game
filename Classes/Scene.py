@@ -1,7 +1,5 @@
-
-
 class Scene:
-    def __init__(self, length, width, background_image, linked_rooms = None, music=None):
+    def __init__(self, length, width, background_image, linked_rooms=None, music=None):
         """
         Create a Scene object. Add entities to the list Scene.entities
 
@@ -16,7 +14,7 @@ class Scene:
         # Dictionaries are mutable, so they shouldn't be used as default parameters
         if linked_rooms is None or type(linked_rooms) != dict:
             # None means no linked scenes
-            self.linked_rooms = {'up':None, 'down':None, 'left':None, 'right':None}
+            self.linked_rooms = {'up': None, 'down': None, 'left': None, 'right': None}
         else:
             self.linked_rooms = linked_rooms
 
@@ -30,5 +28,3 @@ class Scene:
         """
         for entity in self.entities:
             entity.update()
-
-
