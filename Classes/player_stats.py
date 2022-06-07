@@ -25,7 +25,7 @@ class PlayerStats:
 
         return min_value, max_value
 
-    def __init__(self, new_game=True, scene_id=None, hunger=20.0, thirst=20.0, sanity=50.0, ):
+    def __init__(self, new_game=True, hunger=20.0, thirst=20.0, sanity=50.0, scene_id=None):
         """
         Creates a PlayerStats object with scene_id, custom hunger, thirst and sanity
         Default values are hunger:20, thirst:20, sanity:50
@@ -35,7 +35,7 @@ class PlayerStats:
         Remember to save the player stats on game exit. It will automatically load them on game start.
 
         :param new_game: (bool) True if starting a new game, False if continuing the previous game (load from file)
-        :param scene_id: (string) the scene player was first in on creation of the PlayerStats object
+        :param scene_id: (string) the scene player is in on creation of the PlayerStats object. Does not need to be set right away
         :param hunger: (float) The player's hunger stat
         :param thirst: (float) The player's thirst stat
         :param sanity: (float) The player's sanity stat
@@ -255,6 +255,7 @@ class PlayerStats:
     def update_scene_id(self, ID):
         """
         Updates the scene_id with the new scene the player moves to
+        If first_scene_id is None (haven't been set yet), it will be set to the current scene_id
 
         :param ID: The scene the player moves to.
         """
