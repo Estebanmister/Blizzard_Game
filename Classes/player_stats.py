@@ -33,6 +33,7 @@ class PlayerStats:
 
         Let's run the game the hardcore way. The player gets sent directly back to the beginning on death (shouldn't be too hard).
         Remember to save the player stats on game exit. It will automatically load them on game start.
+        scene_id does not need to be set now. Just call the update_scene_id() function whenever needed.
 
         :param new_game: (bool) True if starting a new game, False if continuing the previous game (load from file)
         :param scene_id: (string) the scene player is in on creation of the PlayerStats object. Does not need to be set right away
@@ -65,13 +66,18 @@ class PlayerStats:
             else:
                 self.__sanity = sanity
 
+            # We will need to save the player's initial stats in a file for later uses
+            self.save_to_file("initial_stats.csv")
+
         # Else, load from file
         else:
-            self.read_file()
+            self.read_file("stats.csv")
 
-    def save_to_file(self):
+    def save_to_file(self, filename="stats.csv"):
         """
         Saves player stats to file
+
+        :param filename: The file to save the stats to
         """
 
         # Set the header, save the values accordingly
@@ -82,18 +88,20 @@ class PlayerStats:
                  "hunger": round(self.__hunger, 3),
                  "thirst": round(self.__thirst, 3),
                  "sanity": round(self.__sanity, 3)}
-        with open("stats.csv", "w") as csvfile:
+        with open(filename, "w") as csvfile:
             write = csv.DictWriter(csvfile, fieldnames=fields)
             write.writeheader()
             write.writerow(stats)
 
-    def read_file(self):
+    def read_file(self, filename):
         """
         Read player stats from csv file, set each variable in PlayerStats class accordingly
+
+        :param filename: The file to load the stats from
         """
 
         # Open csv file, read in each value and assign it to the variable
-        with open('stats.csv', newline='') as csvfile:
+        with open(filename, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for line in reader:
                 self.__health = line["health"]
@@ -148,6 +156,10 @@ class PlayerStats:
         if not self.__health:
             self.__scene_id = self.__first_scene_id
             self.__health = True
+
+            # Load initial stat back in
+            self.read_file("initial_stats.csv")
+
             return False
 
         # Returns the player's health status (Always True)
@@ -268,10 +280,14 @@ class PlayerStats:
         if self.__first_scene_id is None:
             self.__first_scene_id = self.__scene_id
 
-
-test = PlayerStats("test3", 10, 20, 10)
-test.save_to_file()
-print(test.check_alive())
-test.read_file()
-
-print(test.get_stats())
+# Test code
+# test = PlayerStats(True, 0, 0, 0)
+# print(test.get_stats())
+# test.add_hunger(1)
+# test.add_sanity(1)
+# test.add_thirst(1)
+# print(test.get_stats())
+# test.reduce_hunger(100,100)
+# print(test.get_stats())
+# print(test.check_alive())
+# print(test.get_stats())
