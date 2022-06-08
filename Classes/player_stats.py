@@ -1,4 +1,5 @@
 from random import uniform
+import csv
 
 
 class PlayerStats:
@@ -24,46 +25,105 @@ class PlayerStats:
 
         return min_value, max_value
 
-    def __init__(self,scene_id, hunger=20.0, thirst=20.0, sanity=50.0):
+    def __init__(self, new_game=True, hunger=20.0, thirst=20.0, sanity=50.0, scene_id=None):
         """
-        Creates a PlayerStats object with sceneid, custom hunger, thirst and sanity
+        Creates a PlayerStats object with scene_id, custom hunger, thirst and sanity
         Default values are hunger:20, thirst:20, sanity:50
 
+
+        Let's run the game the hardcore way. The player gets sent directly back to the beginning on death (shouldn't be too hard).
+        Remember to save the player stats on game exit. It will automatically load them on game start.
+        scene_id does not need to be set now. Just call the update_scene_id() function whenever needed.
+
+        :param new_game: (bool) True if starting a new game, False if continuing the previous game (load from file)
+        :param scene_id: (string) the scene player is in on creation of the PlayerStats object. Does not need to be set right away
         :param hunger: (float) The player's hunger stat
         :param thirst: (float) The player's thirst stat
         :param sanity: (float) The player's sanity stat
         """
 
-        self.__health = True
-        self.__scene_id = scene_id
+        # If starting a new game, initialize variables
+        if new_game:
+            self.__health = True
+            self.__scene_id = scene_id
 
-        # Default the last_scene_id to scene_id on load
-        self.__last_scene_id = scene_id
+            # Default the first_scene_id to scene_id on load
+            self.__first_scene_id = scene_id
 
-        # Set to default value if input is invalid (less than or equal to 0)
-        if hunger <= 0:
-            self.__hunger = 20.0
+            # Set to default value if input is invalid (less than or equal to 0)
+            if hunger <= 0:
+                self.__hunger = 20.0
+            else:
+                self.__hunger = hunger
+
+            if thirst <= 0:
+                self.__thirst = 20.0
+            else:
+                self.__thirst = thirst
+
+            if sanity <= 0:
+                self.__sanity = 50.0
+            else:
+                self.__sanity = sanity
+
+            # We will need to save the player's initial stats in a file for later uses
+            self.save_to_file("initial_stats.csv")
+
+        # Else, load from file
         else:
-            self.__hunger = hunger
+            self.read_file("stats.csv")
 
-        if thirst <= 0:
-            self.__thirst = 20.0
-        else:
-            self.__thirst = thirst
+    def save_to_file(self, filename="stats.csv"):
+        """
+        Saves player stats to file
 
-        if sanity <= 0:
-            self.__sanity = 50.0
-        else:
-            self.__sanity = sanity
+        :param filename: The file to save the stats to
+        """
+
+        # Set the header, save the values accordingly
+        fields = ["health", "scene_id", "first_scene_id", "hunger", "thirst", "sanity"]
+        stats = {"health": self.__health,
+                 "scene_id": self.__scene_id,
+                 "first_scene_id": self.__first_scene_id,
+                 "hunger": round(self.__hunger, 3),
+                 "thirst": round(self.__thirst, 3),
+                 "sanity": round(self.__sanity, 3)}
+        with open(filename, "w") as csvfile:
+            write = csv.DictWriter(csvfile, fieldnames=fields)
+            write.writeheader()
+            write.writerow(stats)
+
+    def read_file(self, filename):
+        """
+        Read player stats from csv file, set each variable in PlayerStats class accordingly
+
+        :param filename: The file to load the stats from
+        """
+
+        # Open csv file, read in each value and assign it to the variable
+        with open(filename, newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for line in reader:
+                self.__health = line["health"]
+                self.__scene_id = line["scene_id"]
+                self.__first_scene_id = line["first_scene_id"]
+                self.__hunger = float(line["hunger"])
+                self.__thirst = float(line["thirst"])
+                self.__sanity = float(line["sanity"])
 
     def get_stats(self):
         """
         Get the player's stats, as a dictionary
 
-        :return: A dictionary, with each player stat listed in the form of stat_name:value, to one decimal place
+        :return: A dictionary, with each player stat (health, scene_id, first_scene_id, hunger, thirst, sanity)
+         listed in the form of stat_name:value, numerical values rounded to one decimal place
         """
-        return {"health": round(self.__health, 1), "hunger": round(self.__hunger, 1), "thirst": round(self.__thirst, 1),
-                "sanity": round(self.__sanity, )}
+        return {"health": self.__health,
+                "scene_id": self.__scene_id,
+                "first_scene_id": self.__first_scene_id,
+                "hunger": round(self.__hunger, 1),
+                "thirst": round(self.__thirst, 1),
+                "sanity": round(self.__sanity, 1)}
 
     def check_stats_for_zero(self):
         """
@@ -78,19 +138,41 @@ class PlayerStats:
     def check_alive(self):
         """
         Check if the player is alive
-        The function will also call the check_stats_for_zero function,
+        The function will call the check_stats_for_zero function,
         which will set the player's health to False if any stat is zero
         (indicating the player is dead)
 
+        If the player is dead (health = False), the player will be returned to the first scene
+        by setting scene_id to first_scene_id.
 
-        :return: True if the player is alive (health = True), False otherwise
+        :return: The function will return False if player is send back to spawn (although their health is set back to True). Otherwise it will return True.
         """
 
         # Set the player's health to False if any stat is zero
         if self.check_stats_for_zero():
             self.__health = False
 
+        # If player's health is False, return to first scene, change health to True
+        if not self.__health:
+            self.__scene_id = self.__first_scene_id
+            self.__health = True
+
+            # Load initial stat back in
+            self.read_file("initial_stats.csv")
+
+            return False
+
+        # Returns the player's health status (Always True)
         return self.__health
+
+    def set_alive(self, alive):
+        """
+        Set the player's health status
+
+        :param alive: (bool) True if player is alive, False if not.
+        """
+
+        self.__health = alive
 
     def reduce_hunger(self, min_value, max_value):
         """
@@ -176,10 +258,36 @@ class PlayerStats:
         """
         return self.__scene_id
 
-    def get_last_scene_id(self):
+    def get_first_scene_id(self):
         """
-        :return: The scene the player was last in
+        :return: The scene the player was first in
         """
-        return self.__last_scene_id
+        return self.__first_scene_id
 
+    def update_scene_id(self, ID):
+        """
+        Updates the scene_id with the new scene the player moves to
+        If first_scene_id is None (haven't been set yet), it will be set to the current scene_id
 
+        :param ID: The scene the player moves to.
+        """
+
+        self.__scene_id = ID
+
+        # When updating scene_id, if first_scene_id is None, we assume that it is the first scene
+        # Thus that will also be updated to match the current scene
+
+        if self.__first_scene_id is None:
+            self.__first_scene_id = self.__scene_id
+
+# Test code
+# test = PlayerStats(True, 0, 0, 0)
+# print(test.get_stats())
+# test.add_hunger(1)
+# test.add_sanity(1)
+# test.add_thirst(1)
+# print(test.get_stats())
+# test.reduce_hunger(100,100)
+# print(test.get_stats())
+# print(test.check_alive())
+# print(test.get_stats())
