@@ -1,6 +1,6 @@
 
 def compare(scene, ID):
-    if scene == None:
+    if scene is None:
         return False
     if scene.ID == ID:
         return scene
