@@ -47,7 +47,7 @@ class Scene:
         if entity.coord[0] > self.length or entity.coord[0] < 0 or entity.coord[1] > self.width or entity.coord[1] < 0:
             raise Exception("Illegal coordinates, map too small or coordinates below 0")
         self.__entities.append(entity)
-
+ 
     def remove_entity(self, ID):
         """
         Search and remove an entity by their ID
