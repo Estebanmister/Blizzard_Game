@@ -39,13 +39,14 @@ class Scene:
         Append an entity object, ID DOES NOT MATTER, IT IS REASSIGNED!
         :param entity: (Entity) Entity object to append
         """
+        if entity.coord[0] > self.length or entity.coord[0] < 0 or entity.coord[1] > self.width or entity.coord[1] < 0:
+            raise Exception("Illegal coordinates, map too small or coordinates below 0")
         # Create a filter that iterates through self.__entities,
         # applies the condition of the type being equal to our entity
         # convert that filter into a list and find the length of that list
         # to see how many of the same entity we already have
         entity.change_ID(len(list(filter(lambda x: type(x) == type(entity), self.__entities))))
-        if entity.coord[0] > self.length or entity.coord[0] < 0 or entity.coord[1] > self.width or entity.coord[1] < 0:
-            raise Exception("Illegal coordinates, map too small or coordinates below 0")
+        entity.assign(self)
         self.__entities.append(entity)
  
     def remove_entity(self, ID):
