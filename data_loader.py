@@ -14,11 +14,12 @@ entity_types = {'entity': Entity}
 def load_dungeon(filename):
     """
     Load a dungeon, the scenes, link the scenes, and add entities.
-    :param filename: The location of the .csv
+    :param filename: The FOLDER of the .csv (NOT the csv file itself)
     :return: Dungeon object
     """
-    with open(filename) as dungeonf:
-        scenesf = open("World/scenes.csv")
+    filename = filename.strip('/')
+    with open(filename+"/dungeon.csv") as dungeonf:
+        scenesf = open(filename+"/scenes.csv")
         scenes_unformated = csv.DictReader(scenesf)
         scenesdict = {'':None}
         for scene in scenes_unformated:
