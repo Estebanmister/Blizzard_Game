@@ -1,5 +1,5 @@
 class Scene:
-    def __init__(self, ID, length, width, background_image, linked_rooms = None, music=None):
+    def __init__(self, ID, length, width, background_image, linked_rooms=None, music=None):
         """
         Create a Scene object. Add entities to the list with append_entity and remove_entity
 

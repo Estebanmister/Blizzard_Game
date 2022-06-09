@@ -1,5 +1,5 @@
 class Entity:
-    def __init__(self, coord, sprite, index = 0):
+    def __init__(self, coord, sprite, index=0):
         """
         Base entity class that all game objects inherit from
         :param index: (Integer) How many of these same entities were already created
