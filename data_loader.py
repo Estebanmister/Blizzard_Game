@@ -26,7 +26,7 @@ def load_dungeon(filename):
                 for param in entity_params:
                     if param != '':
                         things = param.split('*')
-                        entities.append(entity_types[things[0]]([int(things[2]), int(things[3])], load(things[1])))
+                        entities.append(entity_types[things[0]]([int(things[2]), int(things[3])], load(things[1]), args=things[4:]))
             scenesdict[scene['ID']] = Scene(scene['ID'], int(scene['length']), int(scene['width']), back, music=scene['music'])
             for entity in entities:
                 scenesdict[scene['ID']].append_entity(entity)
