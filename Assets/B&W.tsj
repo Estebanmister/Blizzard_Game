@@ -1,0 +1,98 @@
+{ "backgroundcolor":"#000000",
+ "columns":0,
+ "grid":
+    {
+     "height":1,
+     "orientation":"orthogonal",
+     "width":1
+    },
+ "margin":0,
+ "name":"B&W",
+ "objectalignment":"center",
+ "spacing":0,
+ "tilecount":13,
+ "tiledversion":"1.8.5",
+ "tileheight":16,
+ "tiles":[
+        {
+         "id":0,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile0.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":1,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile1.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":2,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile2.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":3,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile8.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":4,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile9.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":5,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile10.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":6,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile16.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":7,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile17.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":8,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile18.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":9,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile56.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":10,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile57.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":11,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile58.png",
+         "imageheight":16,
+         "imagewidth":16
+        }, 
+        {
+         "id":12,
+         "image":"..\/..\/..\/..\/..\/..\/..\/Downloads\/Ascii-wall-like tileset by GibberishDev\/tiles\/tile59.png",
+         "imageheight":16,
+         "imagewidth":16
+        }],
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.8"
+}
