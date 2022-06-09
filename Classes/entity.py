@@ -23,5 +23,9 @@ class Entity:
         Assign a scene object as the parent to this entity, this is done during loading
         """
         self.scene = scene
+
     def update(self):
         print(self.ID)
+
+    def interact(self):
+        print("Interacted with " + self.ID)
