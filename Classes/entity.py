@@ -5,7 +5,7 @@ class Entity:
         :param index: (Integer) How many of these same entities were already created
         :param coord: (List of Integers) X and Y coordinates in tiles
         :param sprite: (Surface) Pygame image to display this entity
-        :param args: (List of any) Not used in base entity, but may have different functionalities on different sublasses
+        :param args: (List of any) Not used in base entity, but may have different functionalities on different subclasses
         """
         assert len(coord) == 2
         self.coord = coord

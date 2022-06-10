@@ -1,3 +1,6 @@
+from Classes.wall import Wall
+
+
 class Scene:
     def __init__(self, ID, length, width, background_image, linked_rooms=None, music=None):
         """
@@ -23,6 +26,9 @@ class Scene:
         self.length = length
         self.width = width
 
+        # Store the illegal coordinates for the scene
+        self.__illegal_coordinates = []
+
     def get_entity(self, ID):
         """
         Search an entity by their ID and return it
@@ -41,6 +47,10 @@ class Scene:
         """
         if entity.coord[0] > self.length or entity.coord[0] < 0 or entity.coord[1] > self.width or entity.coord[1] < 0:
             raise Exception("Illegal coordinates, map too small or coordinates below 0")
+
+        # If entity is Wall, append that coordinate to illegal coordinates
+        if entity is Wall:
+            self.__illegal_coordinates.append(entity.get_coord())
         # Create a filter that iterates through self.__entities,
         # applies the condition of the type being equal to our entity
         # convert that filter into a list and find the length of that list
@@ -48,7 +58,7 @@ class Scene:
         entity.change_ID(len(list(filter(lambda x: type(x) == type(entity), self.__entities))))
         entity.assign(self)
         self.__entities.append(entity)
- 
+
     def remove_entity(self, ID):
         """
         Search and remove an entity by their ID
@@ -67,3 +77,16 @@ class Scene:
         """
         for entity in self.__entities:
             entity.update()
+
+    def check_coordinate(self, coord: tuple):
+        """
+        Checks if a coordinate is illegal for access
+        :param coord: A tuple, (x,y)
+        :return: True if the coordinate is passable, False if not
+        """
+
+        # Check if coord is in list of illegal coordinates
+        if coord in self.__illegal_coordinates:
+            return False
+
+        return True
