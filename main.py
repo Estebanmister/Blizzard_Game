@@ -4,33 +4,32 @@ from Classes import visuals
 
 
 class Main():
-    clock         = None
+    clock = None
 
-    doors         = None
-    item          = None
+    doors = None
+    item = None
 
-    player        = None
-    entities      = []
-
+    player = None
+    entities = []
 
     Visuals = None
 
     def __init__(self):
-            
+
         pygame.init()
-        
-        self.clock = pygame.time.Clock() #makes a clock to check the time
-        self.time_delta = self.clock.tick(30)/1000 #used for pygame_gui elements.
+
+        self.clock = pygame.time.Clock()  # makes a clock to check the time
+        self.time_delta = self.clock.tick(30) / 1000  # used for pygame_gui elements.
         self.Visuals = visuals.Visuals(self.time_delta)
         self.change_screen("title")
 
-        self.update = False #used for moving the entities
+        self.update = False  # used for moving the entities
 
-        self.doors = [58, 59, 64, 63] #each tile in the TMX file has an ID. this declares what number the IDs 'mean'
-        self.item = [65,66]
+        self.doors = [58, 59, 64, 63]  # each tile in the TMX file has an ID. this declares what number the IDs 'mean'
+        self.item = [65, 66]
 
     def start_game(self):
-        #do whatever we need to here
+        # do whatever we need to here
 
         self.game_loop()
 
@@ -65,7 +64,7 @@ class Main():
                         if event.key == pygame.K_w or event.key == pygame.K_UP:
                             self.player.move("up")
                             self.update = True
-                            
+
                         elif event.key == pygame.K_s or event.key == pygame.K_DOWN:
                             self.player.move("down")
                             self.update = True
@@ -77,18 +76,19 @@ class Main():
                         elif event.key == pygame.K_d or event.key == pygame.K_RIGHT:
                             self.player.move("right")
                             self.update = True
-    
+
                 self.Visuals.ui_manager.process_events(event)
 
-            if self.update: #Triggers when we preform an action
+            if self.update:  # Triggers when we preform an action
                 self.update = False
-                #!Method for updating entities (moving them for example) goes here
-            
-            self.Visuals.blit_all()            
+                # !Method for updating entities (moving them for example) goes here
 
-    def load_map(self, mapname = "map"):
-        self.Visuals.gameMap = pytmx.load_pygame('Assets/'+mapname+'.tmx') #loads our map from a TMX file
-        #NOTICE!!! Im getting an error here and i have 0 clue why. "Found external tileset, but cannot handle type: None". Not sure whats up with it right now but ill figure it out. its midnight and i don't want to keep yall waiting any longer for my code.
+            self.Visuals.blit_all()
+
+    def load_map(self, mapname="map"):
+        self.Visuals.gameMap = pytmx.load_pygame('Assets/' + mapname + '.tmx')  # loads our map from a TMX file
+        # NOTICE!!! Im getting an error here and i have 0 clue why. "Found external tileset, but cannot handle type: None". Not sure whats up with it right now but ill figure it out. its midnight and i don't want to keep yall waiting any longer for my code.
+
 
 game = Main()
 game.start_game()
