@@ -1,4 +1,7 @@
-import pygame, pytmx, random, pygame_gui, Classes.visuals
+import pygame, pytmx, random, pygame_gui
+
+from Classes import visuals
+
 
 class Main():
     clock         = None
