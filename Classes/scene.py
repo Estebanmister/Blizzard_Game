@@ -29,6 +29,9 @@ class Scene:
         # Store the illegal coordinates for the scene
         self.__illegal_coordinates = []
 
+    def get_all_entities(self):
+        return self.__entities
+
     def get_entity(self, ID):
         """
         Search an entity by their ID and return it
