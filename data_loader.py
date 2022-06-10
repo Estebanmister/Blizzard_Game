@@ -3,9 +3,9 @@ from Classes.dungeon import Dungeon
 from Classes.scene import Scene
 from pygame.image import load
 from Classes.entity import Entity
+from Classes.player import Player
 
-
-entity_types = {'entity': Entity}
+entity_types = {'entity': Entity, 'player': Player}
 
 # This code may look like dark magic, but I swear i will be commenting how everything works as soon as i can.
 # - Esteban
