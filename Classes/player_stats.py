@@ -143,9 +143,11 @@ class PlayerStats:
         (indicating the player is dead)
 
         If the player is dead (health = False), the player will be returned to the first scene
-        by setting scene_id to first_scene_id.
+        by setting scene_id to first_scene_id. Since the game currently does not support recursive searching for a specific scene,
+        the function will respawn the player and return False on call, if the player is dead.
 
-        :return: The function will return False if player is send back to spawn (although their health is set back to True). Otherwise it will return True.
+        :return: The function will return False if player dies and respawn (although their health is set back to True).
+        Otherwise it will return True (if the player is alive).
         """
 
         # Set the player's health to False if any stat is zero
@@ -154,7 +156,11 @@ class PlayerStats:
 
         # If player's health is False, return to first scene, change health to True
         if not self.__health:
-            self.__scene_id = self.__first_scene_id
+            if self.__first_scene_id is not None:
+                # Only send the player back to the first scene if the first scene is set
+                self.__scene_id = self.__first_scene_id
+
+            # Set health back to True
             self.__health = True
 
             # Load initial stat back in
