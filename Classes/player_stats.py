@@ -73,6 +73,11 @@ class PlayerStats:
         else:
             self.read_file("../Player/stats.csv")
 
+        # Either case, we need to load the initial stats as a dict
+        with open("../Player/initial_stats.csv", 'r') as stats_dict:
+            reader = csv.DictReader(stats_dict)
+            self.stats_dict = next(reader)
+
     def save_to_file(self, filename="../Player/stats.csv"):
         """
         Saves player stats to file
@@ -234,29 +239,48 @@ class PlayerStats:
     def add_hunger(self, value):
         """
         Adds an amount to the hunger
+        value will not exceed default
 
         :param value: The amount being add to the hunger stat
         """
+        max_hunger = float(self.stats_dict["hunger"])
 
-        self.__hunger += value
+        # if exceeds max, set to max, else add
+        if self.__hunger + value > max_hunger:
+            self.__hunger = max_hunger
+        else:
+            self.__hunger += value
 
     def add_thirst(self, value):
         """
         Adds an amount to the thirst
+        value will not exceed default
 
         :param value: The amount being add to the thirst stat
         """
+        max_thirst = float(self.stats_dict["thirst"])
 
-        self.__thirst += value
+        # if exceeds max, set to max, else add
+        if self.__thirst + value > max_thirst:
+            self.__thirst = max_thirst
+        else:
+            self.__thirst += value
 
     def add_sanity(self, value):
         """
         Adds an amount to the sanity
+        value will not exceed default
 
         :param value: The amount being add to the sanity stat
         """
 
-        self.__sanity += value
+        max_sanity = float(self.stats_dict["sanity"])
+
+        # if exceeds max, set to max, else add
+        if self.__sanity + value > max_sanity:
+            self.__sanity = max_sanity
+        else:
+            self.__sanity += value
 
     def get_current_scene_id(self):
         """
@@ -286,8 +310,16 @@ class PlayerStats:
         if self.__first_scene_id is None:
             self.__first_scene_id = self.__scene_id
 
+
 # Test code
-# test = PlayerStats(True, 0, 0, 0)
+# test = PlayerStats(True, 10, 10, 10)
+# print(test.get_stats())
+# test.reduce_thirst(5,5)
+# test.reduce_hunger(5,5)
+# test.reduce_sanity(5,5)
+# test.add_thirst(10)
+# test.add_sanity(10)
+# test.add_hunger(10)
 # print(test.get_stats())
 # test.save_to_file()
 # test.add_hunger(1)
