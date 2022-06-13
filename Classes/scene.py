@@ -90,7 +90,6 @@ class Scene:
         """
 
         # Check if coord is in list of illegal coordinates
-        print(self.__illegal_coordinates)
         if coord in self.__illegal_coordinates:
             return False
         if coord[0] >= self.width:
