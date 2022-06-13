@@ -8,10 +8,10 @@ import os
 #a basic white tuple to make writing colors easier
 #set desired width and height game will run at later
 FPS = 60
-white = (255,255,255)
-width, height = 700,700
+white = (255, 255, 255)
+width, height = 700, 700
 
-#calculate the sprite scale using screen -- calculation is done in Main()
+# calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
 scX = 0
 
@@ -69,10 +69,11 @@ def Main():
             
 
 def draw_display(scene):
-    screen.blit(pygame.transform.scale(scene.background_image,(width,height)),(0,0)) 
+    screen.blit(pygame.transform.scale(scene.background_image, (width, height)), (0, 0))
     for entity in scene.get_all_entities():
         coordinateDraw = entity.coord 
         screen.blit(pygame.transform.scale(entity.sprite,(scX,scY)),((coordinateDraw[0]* scX,coordinateDraw[1]*scY)))
     pygame.display.update()
+
 
 Main()
