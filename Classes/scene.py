@@ -91,5 +91,13 @@ class Scene:
         # Check if coord is in list of illegal coordinates
         if coord in self.__illegal_coordinates:
             return False
+        if coord[0] > self.width:
+            return False
+        if coord[1] > self.length:
+            return False
+        if coord[0] < 0:
+            return False
+        if coord[1] < 0:
+            return False
 
         return True
