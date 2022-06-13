@@ -1,5 +1,5 @@
 ID,length,width,background_image,music,entities
 end,5,5,,,entity*Assets/Sprites/placeholder.png*3*3;
 hallway,5,10,Assets/Backgrounds/placeholder.png,,entity*Assets/Sprites/placeholder.png*1*1;
-house,10,10,Assets/Backgrounds/placeholder.png,,player*Assets/Sprites/placeholder.png*5*5*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png;entity*Assets/Sprites/placeholder.png*0*0;
+house,10,10,Assets/Backgrounds/placeholder.png,,player*Assets/Sprites/placeholder.png*5*5*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png*Assets/Sprites/placeholder.png;wall*Assets/Sprites/placeholder.png*0*0;
 secret,2,20,,,
