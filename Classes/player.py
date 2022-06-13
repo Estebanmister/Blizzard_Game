@@ -48,7 +48,7 @@ class Player(Entity):
         """
         RANGE = 4
         closest_entity = None
-        for entity in self.scene.__entities:
+        for entity in self.scene.get_all_entities():
             if entity == self:
                 continue
             distance = sqrt((entity.coord[0] - self.coord[0])**2 + (entity.coord[1] - self.coord[1])**2)
