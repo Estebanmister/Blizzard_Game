@@ -11,7 +11,11 @@ FPS = 60
 white = (255, 255, 255)
 width, height = 700, 700
 
-# calculate the sprite scale using screen -- calculation is done in Main()
+FPS = 60
+white = (255,255,255)
+width, height = 700,700
+
+#calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
 scX = 0
 
@@ -42,6 +46,8 @@ def player_movement(keys_pressed):
         player_obj.move('down')
         print("works")
 
+placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
+placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 
 def Main():
     clock = pygame.time.Clock()
@@ -52,7 +58,6 @@ def Main():
     global currentScene
     global player_obj
     global scY, scX
-
     scX = width/currentScene.width
     scY = height/currentScene.length
     
@@ -69,11 +74,10 @@ def Main():
             
 
 def draw_display(scene):
-    screen.blit(pygame.transform.scale(scene.background_image, (width, height)), (0, 0))
+    screen.blit(pygame.transform.scale(scene.background_image,(width,height)),(0,0)) 
     for entity in scene.get_all_entities():
         coordinateDraw = entity.coord 
         screen.blit(pygame.transform.scale(entity.sprite,(scX,scY)),((coordinateDraw[0]* scX,coordinateDraw[1]*scY)))
     pygame.display.update()
-
 
 Main()
