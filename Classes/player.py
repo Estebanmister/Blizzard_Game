@@ -1,6 +1,6 @@
 from Classes.entity import Entity
 from math import sqrt
-
+from pygame.image import load
 
 class Player(Entity):
     def __init__(self, coord, sprite, index=0, args=()):
@@ -11,7 +11,9 @@ class Player(Entity):
         :param args: (List of pygame.surfaces) IMPORTANT! The arguments for this class represent the 4 sprites displayed with each motion
         """
         Entity.__init__(self, coord, sprite, index, args)
-        self.direction_sprites = args
+        self.direction_sprites = []
+        for arg in args:
+            self.direction_sprites.append(load(arg))
 
     def move(self, direction):
         """
