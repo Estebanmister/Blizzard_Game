@@ -93,9 +93,9 @@ class Scene:
         print(self.__illegal_coordinates)
         if coord in self.__illegal_coordinates:
             return False
-        if coord[0] > self.width:
+        if coord[0] >= self.width:
             return False
-        if coord[1] > self.length:
+        if coord[1] >= self.length:
             return False
         if coord[0] < 0:
             return False
