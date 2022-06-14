@@ -31,7 +31,7 @@ screen = pygame.display.set_mode((width,height))
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
 placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 
-
+#Stagger player movement somehow, to prevent spam and ultra fast movement
 def player_movement(keys_pressed):
     if keys_pressed[pygame.K_a]:
         print("works")
@@ -40,10 +40,14 @@ def player_movement(keys_pressed):
         player_obj.move('right')
         print("works")
     if keys_pressed[pygame.K_w]:
-        player_obj.move('up')
+        player_obj.move('down')
         print("works")
     if keys_pressed[pygame.K_s]:
-        player_obj.move('down')
+        player_obj.move('up')
+        print("works")
+    #Make feature to capture the MOVE up, SAY xyz, MOVE down...
+    if keys_pressed[pygame.K_e]:
+        player_obj.interact_with()
         print("works")
 
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
