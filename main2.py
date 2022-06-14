@@ -1,5 +1,5 @@
 from cProfile import run
-import pygame, pytmx, random, pygame_gui
+import pygame, random
 from data_loader import *
 from Classes import visuals
 import os

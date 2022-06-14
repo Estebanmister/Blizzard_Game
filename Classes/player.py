@@ -57,6 +57,9 @@ class Player(Entity):
                     if distance < sqrt((closest_entity.coord[0] - self.coord[0])**2 + (closest_entity.coord[1] - self.coord[1])**2):
                         if entity.interactable:
                             closest_entity = entity
+                else:
+                    if entity.interactable:
+                        closest_entity = entity
         if closest_entity:
             return closest_entity.interact()
         else:

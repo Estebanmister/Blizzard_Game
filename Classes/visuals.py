@@ -1,5 +1,4 @@
-import pygame, pygame_gui, pytmx
-
+import pygame, pygame_gui
 
 class Visuals():
     screen = "title"  # change to  "title" or "game" to switch what screen is shown. We can use this for future screens too! (like character creation or stat screens.)
