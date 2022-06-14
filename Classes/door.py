@@ -4,6 +4,7 @@ from Classes.entity import Entity
 class Door(Entity):
     def __init__(self, coord, sprite, index=0, args=()):
         Entity.__init__(self, coord, sprite, index, args)
+        self.interactable = True
 
     def interact(self):
         """

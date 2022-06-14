@@ -14,6 +14,7 @@ class Entity:
         self.sprite = sprite
         # Parent scene
         self.scene = None
+        self.interactable = False
 
     def change_ID(self, index):
         self.ID = str(self.__class__).split("'")[1].split('.')[-1] + str(index)
