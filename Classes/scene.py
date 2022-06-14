@@ -39,7 +39,7 @@ class Scene:
         :return: (Entity) or False on fail
         """
         for entity in self.__entities:
-            if entity.ID == ID:
+            if entity.ID.lower() == ID.lower():
                 return entity
         return False
 

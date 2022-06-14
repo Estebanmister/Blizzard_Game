@@ -1,2 +1,2 @@
 health,scene_id,first_scene_id,hunger,thirst,sanity
-True,,,10,10,10
+True,,,20.0,20.0,50.0
