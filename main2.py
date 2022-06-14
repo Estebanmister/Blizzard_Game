@@ -12,6 +12,7 @@ FPS = 60
 white = (255, 255, 255)
 width, height = 700, 700
 
+counter = 40
 FPS = 60
 white = (255,255,255)
 width, height = 700,700
@@ -32,21 +33,24 @@ screen = pygame.display.set_mode((width,height))
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
 placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 
-#Stagger player movement somehow, to prevent spam and ultra fast movement
+#Stagger player movement, to prevent spam and ultra fast movement
 def player_movement(keys_pressed):
     global currentScene
-    if keys_pressed[pygame.K_a]:
-        print("works")
-        player_obj.move('left')
-    if keys_pressed[pygame.K_d]:
-        player_obj.move('right')
-        print("works")
-    if keys_pressed[pygame.K_w]:
-        player_obj.move('down')
-        print("works")
-    if keys_pressed[pygame.K_s]:
-        player_obj.move('up')
-        print("works")
+    global player_obj
+    global counter
+    
+    if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
+        counter -= 1
+        if counter == 0:
+            if keys_pressed[pygame.K_w]:
+                player_obj.move('down')
+            elif keys_pressed[pygame.K_a]:
+                player_obj.move('left')
+            elif keys_pressed[pygame.K_s]:
+                player_obj.move('up')
+            elif keys_pressed[pygame.K_d]:
+                player_obj.move('right')
+            counter = 40
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
         command_to_do = player_obj.interact_with()
@@ -58,10 +62,11 @@ def player_movement(keys_pressed):
             middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
             if middle_scene != None:
                 currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
+                currentScene.append_entity(Player((5,5),placeHolderSprite,args=['Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png']))
+                player_obj = currentScene.get_entity('Player0')
                 print(currentScene.ID)
 
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
-placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 
 def Main():
     clock = pygame.time.Clock()
@@ -74,7 +79,8 @@ def Main():
     global scY, scX
     scX = width/currentScene.width
     scY = height/currentScene.length
-    
+    global placeHolderSprite
+    placeHolderSprite = pygame.transform.scale(placeHolderSprite,(scX/10,scY/10))
 
     pygame.display.set_caption("Blizzard")
     while run:
