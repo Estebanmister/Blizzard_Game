@@ -1,5 +1,7 @@
 from cProfile import run
+from glob import glob
 from pickle import NONE
+from re import T
 import pygame, random
 from data_loader import *
 from Classes import visuals
@@ -37,20 +39,18 @@ placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 def player_movement(keys_pressed):
     global currentScene
     global player_obj
-    global counter
-    
+
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        counter -= 1
-        if counter == 0:
-            if keys_pressed[pygame.K_w]:
-                player_obj.move('down')
-            elif keys_pressed[pygame.K_a]:
-                player_obj.move('left')
-            elif keys_pressed[pygame.K_s]:
-                player_obj.move('up')
-            elif keys_pressed[pygame.K_d]:
-                player_obj.move('right')
-            counter = 40
+        if keys_pressed[pygame.K_w]:
+            player_obj.move('down')
+        elif keys_pressed[pygame.K_a]:
+            player_obj.move('left')
+        elif keys_pressed[pygame.K_s]:
+            player_obj.move('up')
+        elif keys_pressed[pygame.K_d]:
+            player_obj.move('right')
+        pygame.time.delay(400)
+
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
         command_to_do = player_obj.interact_with()
@@ -77,6 +77,7 @@ def Main():
     global currentScene
     global player_obj
     global scY, scX
+
     scX = width/currentScene.width
     scY = height/currentScene.length
     global placeHolderSprite
