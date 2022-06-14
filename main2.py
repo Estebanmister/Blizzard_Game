@@ -1,4 +1,5 @@
 from cProfile import run
+from pickle import NONE
 import pygame, random
 from data_loader import *
 from Classes import visuals
@@ -33,6 +34,7 @@ placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
 
 #Stagger player movement somehow, to prevent spam and ultra fast movement
 def player_movement(keys_pressed):
+    global currentScene
     if keys_pressed[pygame.K_a]:
         print("works")
         player_obj.move('left')
@@ -48,9 +50,15 @@ def player_movement(keys_pressed):
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
         command_to_do = player_obj.interact_with()
-        print(command_to_do)
         if command_to_do == None:
             print("there's interact with here")
+            return
+        if command_to_do.split(' ')[0] == 'MOVE':
+            print(command_to_do.split(' ')[1])
+            middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
+            if middle_scene != None:
+                currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
+                print(currentScene.ID)
 
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
 placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
