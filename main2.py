@@ -47,8 +47,10 @@ def player_movement(keys_pressed):
         print("works")
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
-        player_obj.interact_with()
-        print("works")
+        command_to_do = player_obj.interact_with()
+        print(command_to_do)
+        if command_to_do == None:
+            print("there's interact with here")
 
 placeHolderSprite =  pygame.image.load('Assets/Sprites/placeholder.png')
 placeHolderSprite = pygame.transform.scale(placeHolderSprite,(70,70))
