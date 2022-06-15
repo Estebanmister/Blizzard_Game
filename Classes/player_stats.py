@@ -1,6 +1,9 @@
 from random import uniform
 import csv
 
+# PlayerStats object should be saved in player_stats variable to be accessed by other classes
+global player_stats
+
 
 class PlayerStats:
 
@@ -27,6 +30,7 @@ class PlayerStats:
 
     def __init__(self, new_game=True, hunger=20.0, thirst=20.0, sanity=50.0, scene_id=None):
         """
+        IMPORTANT: when creating this object, create it by editing the player_stats global variable
         Creates a PlayerStats object with scene_id, custom hunger, thirst and sanity
         Default values are hunger:20, thirst:20, sanity:50
 
@@ -309,7 +313,6 @@ class PlayerStats:
 
         if self.__first_scene_id is None:
             self.__first_scene_id = self.__scene_id
-
 
 # Test code
 # test = PlayerStats(True, 10, 10, 10)

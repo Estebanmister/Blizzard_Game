@@ -1,14 +1,14 @@
 from Classes.entity import Entity
 from random import randint
+from Classes.player_stats import player_stats
 
 
 class WaterBottle(Entity):
     # class initializer
-    def __init__(self, coord, sprite, player_stats, index=0, args=()):
+    def __init__(self, coord, sprite, index=0, args=()):
         """
         WaterBottle entity, inherits Entity.
 
-        :param player_stats: The playerStats object
         :param index: (Integer) How many of these same entities were already created
         :param coord: (List of Integers) X and Y coordinates in tiles
         :param sprite: (Surface) Pygame image to display this entity
@@ -28,11 +28,10 @@ class WaterBottle(Entity):
 
 class CannedFood(Entity):
     # class initializer
-    def __init__(self, coord, sprite, player_stats, index=0, args=()):
+    def __init__(self, coord, sprite, index=0, args=()):
         """
         CannedFood entity, inherits Entity.
 
-        :param player_stats: The playerStats object
         :param index: (Integer) How many of these same entities were already created
         :param coord: (List of Integers) X and Y coordinates in tiles
         :param sprite: (Surface) Pygame image to display this entity

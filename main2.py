@@ -3,10 +3,11 @@ from glob import glob
 from pickle import NONE
 from re import T
 import pygame, random
+
+
 from data_loader import *
 from Classes import visuals
 import os
-
 #define some variables, what FPS game will run at
 #a basic white tuple to make writing colors easier
 #set desired width and height game will run at later
