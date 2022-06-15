@@ -1,5 +1,4 @@
 from Classes.entity import Entity
-from Classes.player_stats import PlayerStats
 from random import randint
 
 
@@ -17,12 +16,14 @@ class WaterBottle(Entity):
         """
         Entity.__init__(self, coord, sprite, index, args)
         self.__player_stats = player_stats
+        self.interactable = True
 
     def drink(self):
         """
         Adds a random hydration to the player (between 3-6)
         """
         self.__player_stats.add_thirst(randint(3, 6))
+        self.scene.remove_entity(self.ID)
 
 
 class CannedFood(Entity):
@@ -40,9 +41,11 @@ class CannedFood(Entity):
 
         Entity.__init__(self, coord, sprite, index, args)
         self.__player_stats = player_stats
+        self.interactable = True
 
     def eat(self):
         """
         Adds a random saturation to the player (between 3-6)
         """
         self.__player_stats.add_hunger(randint(3, 6))
+        self.scene.remove_entity(self.ID)
