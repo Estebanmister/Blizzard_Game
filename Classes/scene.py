@@ -1,4 +1,4 @@
-from Classes.wall import Wall
+from Classes.collisionentity import CollisionEntity
 
 
 class Scene:
@@ -53,7 +53,7 @@ class Scene:
 
         # If entity is Wall, append that coordinate to illegal coordinates
         # Use isinstance() to check if entity is an instance of the class Wall
-        if isinstance(entity,Wall):
+        if isinstance(entity, CollisionEntity):
             self.__illegal_coordinates.append(entity.get_coord())
         # Create a filter that iterates through self.__entities,
         # applies the condition of the type being equal to our entity
@@ -90,11 +90,11 @@ class Scene:
         """
 
         # Check if coord is in list of illegal coordinates
-        if coord in self.__illegal_coordinates:
+        if list(coord) in self.__illegal_coordinates:
             return False
-        if coord[0] >= self.width:
+        if coord[0] >= self.length:
             return False
-        if coord[1] >= self.length:
+        if coord[1] >= self.width:
             return False
         if coord[0] < 0:
             return False

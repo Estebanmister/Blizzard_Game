@@ -1,9 +1,9 @@
-from Classes.entity import Entity
+from Classes.collisionentity import CollisionEntity
 
 
-class Door(Entity):
+class Door(CollisionEntity):
     def __init__(self, coord, sprite, index=0, args=()):
-        Entity.__init__(self, coord, sprite, index, args)
+        CollisionEntity.__init__(self, coord, sprite, index, args)
         self.interactable = True
 
     def interact(self):

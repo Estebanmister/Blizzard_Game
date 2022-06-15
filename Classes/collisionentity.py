@@ -1,10 +1,10 @@
 from Classes.entity import Entity
 
 
-class Wall(Entity):
+class CollisionEntity(Entity):
 
-    # Wall inherits Entity and contain a tuple of coordinates that is just... illegal
-    def __init__(self, coord: tuple, sprite, index=0, args=()):
+    # CollisionEntity inherits Entity and contain a tuple of coordinates that is just... illegal
+    def __init__(self, coord, sprite, index=0, args=()):
         """
         Creates a wall entity
 

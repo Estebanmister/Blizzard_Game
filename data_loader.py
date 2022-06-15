@@ -4,9 +4,9 @@ from Classes.scene import Scene
 from pygame.image import load
 from Classes.entity import Entity
 from Classes.player import Player
-from Classes.wall import Wall
+from Classes.collisionentity import CollisionEntity
 from Classes.door import Door
-entity_types = {'entity': Entity, 'player': Player, 'wall': Wall, 'door': Door}
+entity_types = {'entity': Entity, 'player': Player, 'wall': CollisionEntity, 'door': Door}
 
 # This code may look like dark magic, but I swear i will be commenting how everything works as soon as i can.
 # - Esteban
@@ -24,6 +24,7 @@ def load_dungeon(filename):
         scenes_unformated = csv.DictReader(scenesf)
         scenesdict = {'':None}
         for scene in scenes_unformated:
+            print("LOADING " + scene['ID'])
             back = ''
             if scene['background_image']:
                 back = load(scene['background_image'])
