@@ -6,7 +6,6 @@ import pygame, random
 
 
 from data_loader import *
-from Classes import visuals
 import os
 #define some variables, what FPS game will run at
 #a basic white tuple to make writing colors easier
@@ -63,7 +62,7 @@ def player_movement(keys_pressed):
             middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
             if middle_scene != None:
                 currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
-                currentScene.append_entity(Player((5,5),placeHolderSprite,args=['Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png']))
+                #currentScene.append_entity(Player((5,5),placeHolderSprite,args=['Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png','Assets/Sprites/placeholder.png']))
                 player_obj = currentScene.get_entity('Player0')
                 print(currentScene.ID)
 
