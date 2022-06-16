@@ -5,6 +5,7 @@ import csv
 global player_stats
 
 
+
 class PlayerStats:
 
     @staticmethod

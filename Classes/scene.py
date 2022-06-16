@@ -51,8 +51,8 @@ class Scene:
         if entity.coord[0] > self.length or entity.coord[0] < 0 or entity.coord[1] > self.width or entity.coord[1] < 0:
             raise Exception("Illegal coordinates, map too small or coordinates below 0")
 
-        # If entity is Wall, append that coordinate to illegal coordinates
-        # Use isinstance() to check if entity is an instance of the class Wall
+        # If entity is CollisionEntity, append that coordinate to illegal coordinates
+        # Use isinstance() to check if entity is an instance of the class CollisionEntity
         if isinstance(entity, CollisionEntity):
             self.__illegal_coordinates.append(entity.get_coord())
         # Create a filter that iterates through self.__entities,
