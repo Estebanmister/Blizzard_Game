@@ -14,9 +14,15 @@ class Entity:
         self.sprite = sprite
         # Parent scene
         self.scene = None
+        # Base entity is not interactive
         self.interactable = False
 
     def change_ID(self, index):
+        """
+        Regenerate the ID according to the amount of entities already present in the scene
+        :param index: How many of this type of entity are present
+        :return:
+        """
         self.ID = str(self.__class__).split("'")[1].split('.')[-1] + str(index)
 
     def assign(self, scene):
@@ -26,7 +32,14 @@ class Entity:
         self.scene = scene
 
     def update(self):
+        """
+        Placeholder on base Entity, used in other subclass entities to perform automatic actions
+        """
         print(self.ID)
 
     def interact(self):
+        """
+        Called when a player entity interacts with the object, only called if self.interactable is set to True
+        :return:
+        """
         print("Interacted with " + self.ID)

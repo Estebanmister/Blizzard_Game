@@ -30,6 +30,10 @@ class Scene:
         self.__illegal_coordinates = []
 
     def get_all_entities(self):
+        """
+        Get all entities present in the scene
+        :return: list of Entity objects
+        """
         return self.__entities
 
     def get_entity(self, ID):

@@ -3,6 +3,14 @@ from Classes.collisionentity import CollisionEntity
 
 class Door(CollisionEntity):
     def __init__(self, coord, sprite, index=0, args=()):
+        """
+        Door class, will allow the player to move to the closest linked room, according to where the Door is placed inside of the scene
+        Requires to be interacted with in order to change scene
+        :param coord: (tuple of ints) Where to place the door on the grid
+        :param sprite: (pygame.Surface) Sprite of the door
+        :param index: (int) How many of these are already in the scene (not to be used by frontend)
+        :param args: Not used for Doors
+        """
         CollisionEntity.__init__(self, coord, sprite, index, args)
         self.interactable = True
 
@@ -14,10 +22,10 @@ class Door(CollisionEntity):
         width = self.scene.width
         length = self.scene.length
         distance_from_left = abs(self.coord[0] - 0)
-        distance_from_right = abs(self.coord[0] - width)
+        distance_from_right = abs(self.coord[0] - length + 1)
         distance_from_up = abs(self.coord[1] - 0)
-        distance_from_down = abs(self.coord[1] - length)
+        distance_from_down = abs(self.coord[1] - width + 1)
         distances = [distance_from_left, distance_from_right, distance_from_up, distance_from_down]
+        print(distances)
         direction = ['left', 'right', 'up', 'down']
-
         return "MOVE " + direction[distances.index(min(distances))]
