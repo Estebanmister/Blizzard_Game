@@ -1,5 +1,6 @@
 from cProfile import run
 from glob import glob
+from itertools import tee
 from pickle import NONE
 from re import T
 import pygame, random
@@ -45,12 +46,14 @@ def quickText(textToFill):
         textOnScreen = textToFill
     else:
         pass
-    
+
+def clearText():
+    global textOnScreen
+    textOnScreen = ''
 
 def displayMenu():
     screen.fill(black)
     drawText("MENU",font,white,width/2,0)
-
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
@@ -62,15 +65,16 @@ def player_input(keys_pressed):
     global textOnScreen
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        if keys_pressed[pygame.K_w]:
-            player_obj.move('down')
-        elif keys_pressed[pygame.K_a]:
-            player_obj.move('left')
-        elif keys_pressed[pygame.K_s]:
-            player_obj.move('up')
-        elif keys_pressed[pygame.K_d]:
-            player_obj.move('right')
-        pygame.time.delay(400)
+        if textOnScreen == '' and not gamePaused:    
+            if keys_pressed[pygame.K_w]:
+                player_obj.move('down')
+            elif keys_pressed[pygame.K_a]:
+                player_obj.move('left')
+            elif keys_pressed[pygame.K_s]:
+                player_obj.move('up')
+            elif keys_pressed[pygame.K_d]:
+                player_obj.move('right')
+            pygame.time.delay(300)
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
         if gamePaused == False:
@@ -87,10 +91,8 @@ def player_input(keys_pressed):
             if textOnScreen == '':
                 textOnScreen = "There's nothing to interact with here"
                 quickText(textOnScreen)
-                print("TOS is set")
             else:
-                textOnScreen = ''
-                print("ToS is none")
+                clearText()
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'MOVE':
                 print(command_to_do.split(' ')[1])
@@ -116,6 +118,7 @@ def Main():
     global scale
     global gamePaused
     global textOnScreen
+    global start_time
 
     scX = width/currentScene.width
     scY = height/currentScene.length
@@ -132,6 +135,7 @@ def Main():
         
         if gamePaused == True:
             displayMenu()
+            clearText()
         else:
             draw_display(currentScene)
         if textOnScreen == '':
@@ -139,8 +143,6 @@ def Main():
         else:
             quickText(textOnScreen)
         pygame.display.update()
-
-            
 
 def draw_display(scene):
     screen.fill(black)
@@ -168,4 +170,5 @@ def draw_display(scene):
                 screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
 
 
+#run the program
 Main()
