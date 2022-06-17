@@ -6,7 +6,7 @@ class CollisionEntity(Entity):
     # CollisionEntity inherits Entity and contain a tuple of coordinates that is just... illegal
     def __init__(self, coord, sprite, index=0, args=()):
         """
-        Creates a wall entity
+        Creates a collision entity, that will add an illegal coordinate to the scene, to restrict movement
 
         :param coord: (tuple) X and Y coordinates in tiles, in form of (x,y)
         :param sprite: (Surface) Pygame image to display for a wall entity
