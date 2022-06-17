@@ -103,7 +103,7 @@ def player_input(keys_pressed):
                     print(currentScene.ID)
                     scX = width/currentScene.width
                     scY = height/currentScene.length
-                    scale = scX
+                    scale = min(scX,scY)
         pygame.time.delay(400)
 
 def Main():
@@ -151,9 +151,11 @@ def draw_display(scene):
     #first moves +right -left, second moves +down -up. 
     #I flipped the order of scene.length/2 and scene.width/2
     if scene.width > scene.length:
-        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),((width - (scX * scene.length))/2,0))
+        # Vertical rooms
+        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scX)),((width - (scX * scene.length))/2,0))
     if scene.length > scene.width:
-        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0,(height - (scY * scene.width))/2))
+        # Horizontal rooms
+        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scY, scene.width * scY)),(0,(height - (scY * scene.width))/2))
     if scene.length == scene.width:
         screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0))
     #last ones below are (0,0) as a fallback
@@ -164,7 +166,7 @@ def draw_display(scene):
             if entity.ID != 'wall':
                 screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale + (width - (scX * scene.length))/2),coordinateDraw[1]*scale)))
         if scene.length > scene.width:
-            screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.height))/2))))
+            screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
         if scene.length == scene.width:
             if entity.ID != 'wall':
                 screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
