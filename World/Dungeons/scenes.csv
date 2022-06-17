@@ -1,0 +1,2 @@
+ID,length,width,background_image,music,entities
+dasd,10,10,Assets/Backgrounds/placeholder.png,,entity*Assets/Sprites/placeholder.png*3*1;entity*Assets/Sprites/placeholder.png*5*1;entity*Assets/Sprites/placeholder.png*6*1;
