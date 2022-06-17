@@ -24,7 +24,7 @@ createScene()
 
 
 run = True
-
+# Player args: Assets/Sprites/playerup.png*Assets/Sprites/playerdown.png*Assets/Sprites/playerleft.png*Assets/Sprites/playerright.png
 entity = {'type': 'entity', 'sprite':"Assets/Sprites/placeholder.png", 'x':0,'y':0, 'args':''}
 types = ['entity','wall','player','door']
 entities = []
@@ -90,6 +90,18 @@ while run:
                     image_i = 0
                 if '.png' not in all_sprites[image_i]:
                     image_i += 1
+                entity['sprite'] = 'Assets/Sprites/' + all_sprites[image_i]
+                print(entity['sprite'])
+                count = 50
+            else:
+                count -= 1
+        if keys[pygame.K_m]:
+            if count == 0:
+                image_i -= 1
+                if image_i < 0:
+                    image_i = len(all_sprites)-1
+                if '.png' not in all_sprites[image_i]:
+                    image_i -= 1
                 entity['sprite'] = 'Assets/Sprites/' + all_sprites[image_i]
                 print(entity['sprite'])
                 count = 50

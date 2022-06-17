@@ -24,6 +24,8 @@ def load_dungeon(filename):
         scenes_unformated = csv.DictReader(scenesf)
         scenesdict = {'':None}
         for scene in scenes_unformated:
+            if scene['ID'] == '':
+                continue
             print("LOADING " + scene['ID'])
             back = ''
             if scene['background_image']:

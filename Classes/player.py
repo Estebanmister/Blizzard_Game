@@ -25,11 +25,11 @@ class Player(Entity):
         if direction == "up":
             self.coord = (self.coord[0], self.coord[1] + 1)
             if any(self.direction_sprites):
-                self.sprite = self.direction_sprites[0]
+                self.sprite = self.direction_sprites[1]
         elif direction == "down":
             self.coord = (self.coord[0], self.coord[1] - 1)
             if any(self.direction_sprites):
-                self.sprite = self.direction_sprites[1]
+                self.sprite = self.direction_sprites[0]
         elif direction == "left":
             self.coord = (self.coord[0] - 1, self.coord[1])
             if any(self.direction_sprites):

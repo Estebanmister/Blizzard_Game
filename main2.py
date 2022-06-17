@@ -23,12 +23,12 @@ scY = 0
 scX = 0
 scale = 0
 #imports from other files, scene, player object
-currentDungeon = load_dungeon('World/Overworld')
+currentDungeon = load_dungeon('World/Dungeons')
 currentScene = currentDungeon.head
 player_obj = currentScene.get_entity('Player0') 
 #set our screen size
 screen = pygame.display.set_mode((width,height))
-
+pygame.display.set_icon(pygame.image.load("Assets/Sprites/playerdown.png"))
 ##########################################################################
 pygame.font.init()
 
