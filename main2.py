@@ -9,7 +9,7 @@ import os
 import math
 
 #define some variables, what FPS game will run at
-#a basic white tuple to make writing colors easier
+#basic colour tuples to make writing colours easier
 #set desired width and height game will run at later
 FPS = 60
 black = (0,0,0)
@@ -17,6 +17,8 @@ white = (255, 255, 255)
 width, height = 700, 700
 gamePaused = False
 textOnScreen = ''
+tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
+
 
 #calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
@@ -145,11 +147,11 @@ def Main():
         pygame.display.update()
 
 def draw_display(scene):
+    global tempsurf
+
     screen.fill(black)
-    #new solution to drawing scenes to center them:
     #Y axis is width, X axis is length
     #first moves +right -left, second moves +down -up. 
-    #I flipped the order of scene.length/2 and scene.width/2
     if scene.width > scene.length:
         # Vertical rooms
         screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scX)),((width - (scX * scene.length))/2,0))
@@ -162,14 +164,21 @@ def draw_display(scene):
     # screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0)) 
     for entity in scene.get_all_entities():        
         coordinateDraw = entity.coord
-        if scene.width > scene.length:
-            if entity.ID != 'wall':
+        if 'CollisionEntity' not in entity.ID:
+            if scene.width > scene.length:
                 screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale + (width - (scX * scene.length))/2),coordinateDraw[1]*scale)))
-        if scene.length > scene.width:
-            screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
-        if scene.length == scene.width:
-            if entity.ID != 'wall':
+            if scene.length > scene.width:
+                screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
+            if scene.length == scene.width:
                 screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
+        else:
+            if scene.width > scene.length:
+                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale + (width - (scX * scene.length))/2),coordinateDraw[1]*scale)))
+            if scene.length > scene.width:
+                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
+            if scene.length == scene.width:
+                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
+    screen.blit(tempsurf, (0,0))
 
 
 #run the program
