@@ -1,11 +1,7 @@
-from cProfile import run
-from glob import glob
-from itertools import tee
-from pickle import NONE
-from re import T
-import pygame, random
+import pygame
 from data_loader import *
-import os
+from Classes.player_stats import *
+from math import sin, cos, radians
 import math
 
 #define some variables, what FPS game will run at
@@ -27,7 +23,10 @@ scale = 0
 #imports from other files, scene, player object
 currentDungeon = load_dungeon('World/Dungeons')
 currentScene = currentDungeon.head
-player_obj = currentScene.get_entity('Player0') 
+
+player_obj = currentScene.get_entity('Player0')
+player_stats = PlayerStats()
+player_obj.stats = player_stats
 #set our screen size
 screen = pygame.display.set_mode((width,height))
 pygame.display.set_icon(pygame.image.load("Assets/Sprites/playerdown.png"))
@@ -102,10 +101,28 @@ def player_input(keys_pressed):
                 if middle_scene != None:
                     currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
                     player_obj = currentScene.get_entity('Player0')
+                    player_obj.stats = player_stats
                     print(currentScene.ID)
                     scX = width/currentScene.width
                     scY = height/currentScene.length
                     scale = min(scX,scY)
+                    # Cache all of the walls inside of a surface
+                    for entity in currentScene.get_all_entities():
+                        if "CollisionEntity" in entity.ID:
+                            coordinateDraw = entity.coord
+                            sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+                            if currentScene.width > currentScene.length:
+                                tempsurf.blit(sprite, (
+                                    ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                     coordinateDraw[1] * scale)))
+                            if currentScene.length > currentScene.width:
+                                tempsurf.blit(sprite, (
+                                    (coordinateDraw[0] * scale,
+                                     (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                            if currentScene.length == currentScene.width:
+                                tempsurf.blit(sprite,
+                                              (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
+
         pygame.time.delay(400)
 
 def Main():
@@ -127,6 +144,23 @@ def Main():
     scale = scX
 
     pygame.display.set_caption("Blizzard")
+
+    # Cache all of the walls inside of a surface
+    for entity in currentScene.get_all_entities():
+        if "CollisionEntity" in entity.ID:
+            coordinateDraw = entity.coord
+            sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+            if currentScene.width > currentScene.length:
+                tempsurf.blit(sprite, (
+                    ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                     coordinateDraw[1] * scale)))
+            if currentScene.length > currentScene.width:
+                tempsurf.blit(sprite, (
+                    (coordinateDraw[0] * scale,
+                     (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+            if currentScene.length == currentScene.width:
+                tempsurf.blit(sprite,
+                              (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
     while run:
         clock.tick(FPS)
         for event in pygame.event.get():
@@ -140,11 +174,23 @@ def Main():
             clearText()
         else:
             draw_display(currentScene)
+            currentScene.update_all()
         if textOnScreen == '':
             pass
         else:
             quickText(textOnScreen)
         pygame.display.update()
+
+
+def rotate_center(image, angle):
+    """rotate an image while keeping its center and size"""
+    orig_rect = image.get_rect()
+    rot_image = pygame.transform.rotate(image, angle)
+    rot_rect = orig_rect.copy()
+    rot_rect.center = rot_image.get_rect().center
+    rot_image = rot_image.subsurface(rot_rect).copy()
+    return rot_image
+
 
 def draw_display(scene):
     global tempsurf
@@ -162,23 +208,33 @@ def draw_display(scene):
         screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0))
     #last ones below are (0,0) as a fallback
     # screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0)) 
-    for entity in scene.get_all_entities():        
+    for entity in scene.get_all_entities():
+        angle = 0
         coordinateDraw = entity.coord
+        if 'Enemy' in entity.ID:
+            angle = entity.angle_of_sight
+            compx = sin(radians(entity.angle_of_sight))
+            compy = cos(radians(entity.angle_of_sight))
+
+            for s in range(entity.stopped_at+1):
+                x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length))/2)
+                y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width))/2)
+                if entity.hit:
+                    pygame.draw.circle(screen, (255,0,0), (x,y), 3)
+                elif s:
+                    pygame.draw.circle(screen, white, (x, y), 3)
         if 'CollisionEntity' not in entity.ID:
+            sprite = pygame.transform.scale(entity.sprite, (scale, scale))
             if scene.width > scene.length:
-                screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale + (width - (scX * scene.length))/2),coordinateDraw[1]*scale)))
+                screen.blit(rotate_center(sprite, angle), (
+                ((coordinateDraw[0] * scale + (width - (scX * scene.length)) / 2), coordinateDraw[1] * scale)))
             if scene.length > scene.width:
-                screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
+                screen.blit(rotate_center(sprite, angle), (
+                (coordinateDraw[0] * scale, (coordinateDraw[1] * scale + (height - (scY * scene.width)) / 2))))
             if scene.length == scene.width:
-                screen.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
-        else:
-            if scene.width > scene.length:
-                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale + (width - (scX * scene.length))/2),coordinateDraw[1]*scale)))
-            if scene.length > scene.width:
-                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),((coordinateDraw[0]* scale,(coordinateDraw[1]*scale + (height - (scY * scene.width))/2))))
-            if scene.length == scene.width:
-                tempsurf.blit(pygame.transform.scale(entity.sprite,(scale,scale)),(((coordinateDraw[0]* scale,coordinateDraw[1]*scale))))
-    screen.blit(tempsurf, (0,0))
+                screen.blit(rotate_center(sprite, angle),
+                            (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
+    screen.blit(tempsurf, (0, 0))
 
 
 #run the program

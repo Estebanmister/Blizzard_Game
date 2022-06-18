@@ -35,11 +35,11 @@ class Entity:
         """
         Placeholder on base Entity, used in other subclass entities to perform automatic actions
         """
-        print(self.ID)
+        pass
 
     def interact(self):
         """
         Called when a player entity interacts with the object, only called if self.interactable is set to True
         :return:
         """
-        print("Interacted with " + self.ID)
+        #print("Interacted with " + self.ID)

@@ -6,7 +6,8 @@ from Classes.entity import Entity
 from Classes.player import Player
 from Classes.collisionentity import CollisionEntity
 from Classes.door import Door
-entity_types = {'entity': Entity, 'player': Player, 'wall': CollisionEntity, 'door': Door}
+from Classes.enemy import Enemy
+entity_types = {'entity': Entity, 'player': Player, 'wall': CollisionEntity, 'door': Door, 'enemy':Enemy}
 
 # This code may look like dark magic, but I swear i will be commenting how everything works as soon as i can.
 # - Esteban
