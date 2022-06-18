@@ -21,11 +21,14 @@ class Door(CollisionEntity):
         """
         width = self.scene.width
         length = self.scene.length
+        # Calculate distances from the edges of the scene
         distance_from_left = abs(self.coord[0] - 0)
         distance_from_right = abs(self.coord[0] - length + 1)
         distance_from_up = abs(self.coord[1] - 0)
         distance_from_down = abs(self.coord[1] - width + 1)
+        # Put them in a list
         distances = [distance_from_left, distance_from_right, distance_from_up, distance_from_down]
-        print(distances)
+        # List of potential commands, in the same order as the distances list
         direction = ['left', 'right', 'up', 'down']
+        # Return the command that corresponds to the side with the least distance to our door
         return "MOVE " + direction[distances.index(min(distances))]

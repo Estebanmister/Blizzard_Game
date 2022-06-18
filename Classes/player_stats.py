@@ -2,7 +2,6 @@ from random import uniform
 import csv
 
 # PlayerStats object should be saved in player_stats variable to be accessed by other classes
-global player_stats
 
 
 
@@ -72,18 +71,18 @@ class PlayerStats:
                 self.__sanity = sanity
 
             # We will need to save the player's initial stats in a file for later uses
-            self.save_to_file("../Player/initial_stats.csv")
+            self.save_to_file("Player/initial_stats.csv")
 
         # Else, load from file
         else:
-            self.read_file("../Player/stats.csv")
+            self.read_file("Player/stats.csv")
 
         # Either case, we need to load the initial stats as a dict
-        with open("../Player/initial_stats.csv", 'r') as stats_dict:
+        with open("Player/initial_stats.csv", 'r') as stats_dict:
             reader = csv.DictReader(stats_dict)
             self.stats_dict = next(reader)
 
-    def save_to_file(self, filename="../Player/stats.csv"):
+    def save_to_file(self, filename="Player/stats.csv"):
         """
         Saves player stats to file
 
