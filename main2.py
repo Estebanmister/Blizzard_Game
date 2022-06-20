@@ -1,3 +1,6 @@
+from email.mime.nonmultipart import MIMENonMultipart
+from msilib.schema import Class
+from random import sample
 import pygame
 from data_loader import *
 from Classes.player_stats import *
@@ -14,7 +17,7 @@ width, height = 700, 700
 gamePaused = False
 textOnScreen = ''
 tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
-
+sampletext = "hello there" 
 
 #calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
@@ -32,9 +35,26 @@ screen = pygame.display.set_mode((width,height))
 pygame.display.set_icon(pygame.image.load("Assets/Sprites/playerdown.png"))
 ##########################################################################
 pygame.font.init()
-
 font = pygame.font.SysFont('arial',40)
 
+
+class Menu():
+    def __init__(self):
+        pass
+    def displayMenu(self):
+        global gamePaused
+        gamePaused = True
+        screen.fill(black)
+        drawText("MENU",font,white,width/2,0)
+    def hideMenu(self):
+        global gamePaused
+        gamePaused = False    
+#Create an object of the Menu class above, this will be our game menu.
+gameMenu = Menu()
+
+class UI():
+    def __init__(self):
+        
 
 def drawText(text, font, text_col,x,y):
     img = font.render(text,True, text_col)
@@ -52,9 +72,14 @@ def clearText():
     global textOnScreen
     textOnScreen = ''
 
-def displayMenu():
-    screen.fill(black)
-    drawText("MENU",font,white,width/2,0)
+
+
+    def displayUI(self):
+        drawText(textToFill,font,white,0,(height/4)*3)
+    def hideUI(self):
+        pass
+gameUI = UI()
+
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
@@ -66,7 +91,7 @@ def player_input(keys_pressed):
     global textOnScreen
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        if textOnScreen == '' and not gamePaused:
+        if not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
             elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
@@ -88,10 +113,10 @@ def player_input(keys_pressed):
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
         if gamePaused == False:
-            gamePaused = True
+            gameMenu.displayMenu()
             pygame.time.delay(650)
         else:
-            gamePaused = False
+            gameMenu.hideMenu()
             pygame.time.delay(650)
         
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
@@ -179,7 +204,7 @@ def Main():
         player_input(keys_pressed)
         
         if gamePaused == True:
-            displayMenu()
+            gameMenu.displayMenu()
             clearText()
         else:
             draw_display(currentScene)
@@ -188,6 +213,7 @@ def Main():
             pass
         else:
             quickText(textOnScreen)
+        gameUI.displayUI()
         pygame.display.update()
 
 
