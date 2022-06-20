@@ -66,8 +66,16 @@ def player_input(keys_pressed):
     global textOnScreen
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        if textOnScreen == '' and not gamePaused:    
-            if keys_pressed[pygame.K_w]:
+        if textOnScreen == '' and not gamePaused:
+            if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
+                player_obj.move("up-left")
+            elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
+                player_obj.move("up-right")
+            elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_a]:
+                player_obj.move("down-left")
+            elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_d]:
+                player_obj.move("down-right")
+            elif keys_pressed[pygame.K_w]:
                 player_obj.move('down')
             elif keys_pressed[pygame.K_a]:
                 player_obj.move('left')
@@ -75,6 +83,8 @@ def player_input(keys_pressed):
                 player_obj.move('up')
             elif keys_pressed[pygame.K_d]:
                 player_obj.move('right')
+    else:
+        player_obj.move("none")
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
         if gamePaused == False:
