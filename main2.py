@@ -54,7 +54,7 @@ gameMenu = Menu()
 
 class UI():
     def __init__(self):
-        
+        pass
 
 def drawText(text, font, text_col,x,y):
     img = font.render(text,True, text_col)
@@ -73,12 +73,12 @@ def clearText():
     textOnScreen = ''
 
 
-
+"""
     def displayUI(self):
         drawText(textToFill,font,white,0,(height/4)*3)
     def hideUI(self):
         pass
-gameUI = UI()
+gameUI = UI()"""
 
 
 #Stagger player movement, to prevent spam and ultra fast movement
@@ -89,6 +89,7 @@ def player_input(keys_pressed):
     global scale
     global gamePaused
     global textOnScreen
+    global tempsurf
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
         if not gamePaused:
@@ -129,6 +130,29 @@ def player_input(keys_pressed):
             else:
                 clearText()
         if command_to_do is not None:
+            if command_to_do.split(' ')[0] == 'EXIT':
+                newdungeon = command_to_do.split(' ')[1]
+                print("MOVING TO " + newdungeon)
+                currentDungeon = load_dungeon(newdungeon)
+                currentScene = currentDungeon.head
+                player_obj = currentScene.get_entity('Player0')
+                player_obj.stats = player_stats
+                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                for entity in currentScene.get_all_entities():
+                    if "CollisionEntity" in entity.ID:
+                        coordinateDraw = entity.coord
+                        sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+                        if currentScene.width > currentScene.length:
+                            tempsurf.blit(sprite, (
+                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                 coordinateDraw[1] * scale)))
+                        if currentScene.length > currentScene.width:
+                            tempsurf.blit(sprite, (
+                                (coordinateDraw[0] * scale,
+                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                        if currentScene.length == currentScene.width:
+                            tempsurf.blit(sprite,
+                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
             if command_to_do.split(' ')[0] == 'MOVE':
                 print(command_to_do.split(' ')[1])
                 middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
@@ -140,6 +164,7 @@ def player_input(keys_pressed):
                     scX = width/currentScene.width
                     scY = height/currentScene.length
                     scale = min(scX,scY)
+                    tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                     # Cache all of the walls inside of a surface
                     for entity in currentScene.get_all_entities():
                         if "CollisionEntity" in entity.ID:
@@ -157,7 +182,7 @@ def player_input(keys_pressed):
                                 tempsurf.blit(sprite,
                                               (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
 
-        pygame.time.delay(400)
+        pygame.time.delay(100)
 
 def Main():
     clock = pygame.time.Clock()
@@ -213,7 +238,7 @@ def Main():
             pass
         else:
             quickText(textOnScreen)
-        gameUI.displayUI()
+        #gameUI.displayUI()
         pygame.display.update()
 
 

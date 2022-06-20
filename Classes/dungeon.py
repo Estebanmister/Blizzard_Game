@@ -22,8 +22,9 @@ def compare(scene, ID):
             # For every room linked to this one
             # Compare our ID again
             a = compare(room, ID)
-            # Return the result of compare(), it might be a scene, or it might be False
-            return a
+            if a:
+                return a
+        return False
 
 
 class Dungeon:
