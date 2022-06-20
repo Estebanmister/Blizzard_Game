@@ -75,7 +75,6 @@ def player_input(keys_pressed):
                 player_obj.move('up')
             elif keys_pressed[pygame.K_d]:
                 player_obj.move('right')
-            pygame.time.delay(300)
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
         if gamePaused == False:
