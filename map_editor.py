@@ -33,7 +33,7 @@ image_i = 0
 count = 50
 toggle = False
 
-
+clock = pygame.time.Clock()
 while run:
     screen.fill((0,0,0))
     screen.blit(pygame.transform.scale(current_back, (x*50, y*50)), (0,0))
@@ -44,6 +44,7 @@ while run:
     screen = pygame.display.set_mode((x*50,y*50))
 
     for event in pygame.event.get():
+        clock.tick(60)
         if event.type == pygame.QUIT:
             run = False
         keys = pygame.key.get_pressed()
