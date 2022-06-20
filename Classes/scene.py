@@ -104,5 +104,8 @@ class Scene:
             return False
         if coord[1] < 0:
             return False
+        for i in self.__illegal_coordinates:
+            if abs(coord[0]-i[0])<0.85 and abs(coord[1]-i[1])<0.85:
+                return False
 
         return True
