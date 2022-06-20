@@ -35,7 +35,7 @@ toggle = False
 
 clock = pygame.time.Clock()
 while run:
-    screen.fill((0,0,0))
+    #screen.fill((0,0,0))
     screen.blit(pygame.transform.scale(current_back, (x*50, y*50)), (0,0))
     screen.blit(tempsurf, (0,0))
     pos = pygame.mouse.get_pos()
