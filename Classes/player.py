@@ -45,6 +45,22 @@ class Player(Entity):
             self.coord = (self.coord[0] + 0.0333, self.coord[1])
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[3]
+        elif direction == "up-left":
+            self.coord = (self.coord[0] - 0.01665, self.coord[1]-0.01665)
+            if any(self.direction_sprites):
+                self.sprite = self.direction_sprites[2]
+        elif direction == "up-right":
+            self.coord = (self.coord[0] + 0.01665, self.coord[1] - 0.01665)
+            if any(self.direction_sprites):
+                self.sprite = self.direction_sprites[3]
+        elif direction == "down-left":
+            self.coord = (self.coord[0] - 0.01665, self.coord[1] + 0.01665)
+            if any(self.direction_sprites):
+                self.sprite = self.direction_sprites[2]
+        elif direction == "down-right":
+            self.coord = (self.coord[0] + 0.01665, self.coord[1] + 0.01665)
+            if any(self.direction_sprites):
+                self.sprite = self.direction_sprites[3]
         if not self.scene.check_coordinate(self.coord):
             self.coord = previous
 
