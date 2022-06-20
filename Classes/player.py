@@ -31,9 +31,9 @@ class Player(Entity):
         :return: value-0.008
         """
         if value-0.003>0:
-            return value-0.003
+            return value-0.001
         if value+0.003<0:
-            return value+0.003
+            return value+0.001
         return 0
 
     def move(self, direction):
