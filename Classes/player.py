@@ -60,7 +60,7 @@ class Player(Entity):
 
             # Stop player's movement on the other axis.
             self.x_vel=0
-            # Move the player
+            # Increase the acceleration in the right direction
             self.y_vel += acceleration
             if any(self.direction_sprites):
                 # If direction sprites are specified, then select the correct one to display
@@ -122,6 +122,8 @@ class Player(Entity):
             self.y_vel += (acceleration / 2)
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[3]
+
+        # Set a maximum speed
         if self.x_vel > 0.1:
             self.x_vel = 0.1
         if self.y_vel > 0.1:
@@ -130,7 +132,11 @@ class Player(Entity):
             self.x_vel=-0.1
         if self.y_vel <-0.1:
             self.y_vel=-0.1
+
+        # Move the player
         self.coord = (self.coord[0] + self.x_vel, self.coord[1] + self.y_vel)
+
+        # If moves into illegal coordinate, do not move
         if not self.scene.check_coordinate(self.coord):
             self.coord = previous
 
