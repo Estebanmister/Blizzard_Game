@@ -29,20 +29,20 @@ class Player(Entity):
         # Each direction is interpreted by natural language
         if direction == "up":
             # Move the player
-            self.coord = (self.coord[0], self.coord[1] + 0.05)
+            self.coord = (self.coord[0], self.coord[1] + 0.0333)
             if any(self.direction_sprites):
                 # If direction sprites are specificed, then select the correct one to display
                 self.sprite = self.direction_sprites[1]
         elif direction == "down":
-            self.coord = (self.coord[0], self.coord[1] - 0.05)
+            self.coord = (self.coord[0], self.coord[1] - 0.0333)
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[0]
         elif direction == "left":
-            self.coord = (self.coord[0] - 0.05, self.coord[1])
+            self.coord = (self.coord[0] - 0.0333, self.coord[1])
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[2]
         elif direction == "right":
-            self.coord = (self.coord[0] + 0.05, self.coord[1])
+            self.coord = (self.coord[0] + 0.0333, self.coord[1])
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[3]
         if not self.scene.check_coordinate(self.coord):
