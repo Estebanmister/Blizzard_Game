@@ -1,3 +1,4 @@
+from Classes.consumables import WaterBottle, CannedFood
 from Classes.entity import Entity
 from math import sqrt
 from pygame.image import load
@@ -170,6 +171,10 @@ class Player(Entity):
         if closest_entity:
             # If we ended up with a closest entity, then interact with it
             # and return any commands it might have for the frontend
+            if isinstance(closest_entity,WaterBottle):
+                self.stats.add_hunger(closest_entity.drink())
+            elif isinstance(closest_entity,CannedFood):
+                self.stats.add_hunger(closest_entity.eat())
             return closest_entity.interact()
         else:
             # Otherwise return None
