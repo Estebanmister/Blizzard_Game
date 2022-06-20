@@ -17,7 +17,6 @@ width, height = 700, 700
 gamePaused = False
 textOnScreen = ''
 tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
-sampletext = "hello there" 
 
 #calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
@@ -38,47 +37,33 @@ pygame.font.init()
 font = pygame.font.SysFont('arial',40)
 
 
-class Menu():
-    def __init__(self):
-        pass
-    def displayMenu(self):
-        global gamePaused
-        gamePaused = True
-        screen.fill(black)
-        drawText("MENU",font,white,width/2,0)
-    def hideMenu(self):
-        global gamePaused
-        gamePaused = False    
-#Create an object of the Menu class above, this will be our game menu.
-gameMenu = Menu()
-
 class UI():
     def __init__(self):
         pass
-
-def drawText(text, font, text_col,x,y):
-    img = font.render(text,True, text_col)
-    screen.blit(img, (x,y))
-
-def quickText(textToFill):
-    global textOnScreen
-    if textOnScreen != '':
-        drawText(textToFill,font,white,0,(height/4)*3)
+    def toggleMenu(self):
+        global gamePaused
+        if gamePaused == True:
+            gamePaused = False
+        else:
+            gamePaused = True
+        if gamePaused == True:
+            screen.fill(black)
+            self.drawText("MENU",font,white,width/2,0)
+    #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
+    def drawText(self, text, font, text_col,x,y):
+        img = font.render(text,True, text_col)
+        screen.blit(img, (x,y))
+    def quickText(self,textToFill):
+        global textOnScreen
+        self.drawText(textToFill,font,white,0,(height/4)*3)
         textOnScreen = textToFill
-    else:
-        pass
-
-def clearText():
-    global textOnScreen
-    textOnScreen = ''
-
-
-"""
+    def clearText(self):
+        global textOnScreen
+        textOnScreen = ''
     def displayUI(self):
-        drawText(textToFill,font,white,0,(height/4)*3)
-    def hideUI(self):
-        pass
-gameUI = UI()"""
+        self.drawText(textToFill,font,white,0,(height/4)*3)
+
+gameUI = UI()
 
 
 #Stagger player movement, to prevent spam and ultra fast movement
@@ -113,12 +98,8 @@ def player_input(keys_pressed):
         player_obj.move("none")
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
-        if gamePaused == False:
-            gameMenu.displayMenu()
-            pygame.time.delay(650)
-        else:
-            gameMenu.hideMenu()
-            pygame.time.delay(650)
+        gameUI.toggleMenu()
+        pygame.time.delay(650)
         
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
@@ -126,9 +107,9 @@ def player_input(keys_pressed):
         if command_to_do == None:
             if textOnScreen == '':
                 textOnScreen = "There's nothing to interact with here"
-                quickText(textOnScreen)
+                gameUI.quickText(textOnScreen)
             else:
-                clearText()
+                gameUI.clearText()
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
@@ -229,15 +210,15 @@ def Main():
         player_input(keys_pressed)
         
         if gamePaused == True:
-            gameMenu.displayMenu()
-            clearText()
+            gameUI.displayMenu()
+            gameUI.clearText()
         else:
             draw_display(currentScene)
             currentScene.update_all()
         if textOnScreen == '':
             pass
         else:
-            quickText(textOnScreen)
+            gameUI.quickText(textOnScreen)
         #gameUI.displayUI()
         pygame.display.update()
 
