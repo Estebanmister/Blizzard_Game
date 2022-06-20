@@ -24,6 +24,18 @@ class Player(Entity):
     def interact(self):
         print("Ouch!!")
 
+    @staticmethod
+    def deceleration(value):
+        """
+        :param value: A float value
+        :return: value-0.008
+        """
+        if value-0.003>0:
+            return value-0.003
+        if value+0.003<0:
+            return value+0.003
+        return 0
+
     def move(self, direction):
         """
         Moves the player, checks for illegal coordinates, and updates self.sprite according to the movement made
@@ -46,12 +58,12 @@ class Player(Entity):
 
         # Start up acceleration
         if abs(self.x_vel)+abs(self.y_vel)<0.03:
-            acceleration=0.001
+            acceleration=0.0013
 
         # Stop the player movement if no key down
         if direction == "none":
-            self.x_vel = 0
-            self.y_vel = 0
+            self.x_vel=self.deceleration(self.x_vel)
+            self.y_vel =self.deceleration(self.y_vel)
         # Each direction is interpreted by natural language
         if direction == "up":
 
@@ -125,14 +137,14 @@ class Player(Entity):
                 self.sprite = self.direction_sprites[3]
 
         # Set a maximum speed
-        if self.x_vel > 0.1:
-            self.x_vel = 0.1
-        if self.y_vel > 0.1:
-            self.y_vel = 0.1
-        if self.x_vel < -0.1:
-            self.x_vel=-0.1
-        if self.y_vel <-0.1:
-            self.y_vel=-0.1
+        if self.x_vel > 0.22:
+            self.x_vel = 0.22
+        if self.y_vel > 0.22:
+            self.y_vel = 0.22
+        if self.x_vel < -0.22:
+            self.x_vel=-0.22
+        if self.y_vel <-0.22:
+            self.y_vel=-0.22
 
         # Move the player
         self.coord = (self.coord[0] + self.x_vel, self.coord[1] + self.y_vel)
