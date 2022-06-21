@@ -164,7 +164,7 @@ def player_input(keys_pressed):
                 gameUI.clearText()
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'DISPLAY':
-                clearText()
+                gameUI.clearText()
                 textOnScreen = ' '.join(command_to_do.split(' ')[1:])
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
