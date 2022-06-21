@@ -26,7 +26,7 @@ createScene()
 run = True
 # Player args: Assets/Sprites/playerup.png*Assets/Sprites/playerdown.png*Assets/Sprites/playerleft.png*Assets/Sprites/playerright.png
 entity = {'type': 'entity', 'sprite':"Assets/Sprites/placeholder.png", 'x':0,'y':0, 'args':''}
-types = ['entity','wall','player','door','enemy']
+types = ['can','bottle','note','entity','wall','player','door','enemy']
 entities = []
 i = 0
 image_i = 0
@@ -61,7 +61,7 @@ while run:
             ent = ent.strip('*')
             all_scenes[-1]['entities'] += ent + ';'
             print("ENTITY ADDED")
-            print(all_scenes[-1]['entities'])
+            #print(all_scenes[-1]['entities'])
         if keys[pygame.K_s]:
             if count == 0:
                 filename = input("save_as?")
@@ -110,11 +110,14 @@ while run:
                 count -= 1
         if keys[pygame.K_b]:
             if count == 0:
-                amounts = {'entity': 0, 'player':4, 'door': 0, 'wall':0, 'enemy':4}
-                print(types[i] + " HAS " + str(amounts[types[i]]) +
-                      " ARGUMENTS (Read class docstring to see what they do)")
-                for arg_counter in range(amounts[types[i]]):
-                    entity['args'] += input("args>") + "*"
+                amounts = {'can': 0,'bottle': 0,'note': 0,'entity': 0, 'player':4, 'door': 0, 'wall':0, 'enemy':4}
+                if types[i] == 'player':
+                    entity['args'] = "*Assets/Sprites/playerup.png*Assets/Sprites/playerdown.png*Assets/Sprites/playerleft.png*Assets/Sprites/playerright.png"
+                else:
+                    print(types[i] + " HAS " + str(amounts[types[i]]) +
+                          " ARGUMENTS (Read class docstring to see what they do)")
+                    for arg_counter in range(amounts[types[i]]):
+                        entity['args'] += input("args>") + "*"
                 count = 50
             else:
                 count -= 1

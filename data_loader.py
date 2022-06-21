@@ -8,7 +8,11 @@ from Classes.collisionentity import CollisionEntity
 from Classes.door import Door
 from Classes.enemy import Enemy
 from Classes.finaldoor import FinalDoor
-entity_types = {'finaldoor': FinalDoor, 'entity': Entity, 'player': Player, 'wall': CollisionEntity, 'door': Door, 'enemy':Enemy}
+from Classes.consumables import WaterBottle, CannedFood
+from Classes.notes import Notes
+
+
+entity_types = {'note':Notes,'bottle':WaterBottle , 'can':CannedFood , 'finaldoor': FinalDoor, 'entity': Entity, 'player': Player, 'wall': CollisionEntity, 'door': Door, 'enemy':Enemy}
 
 # This code may look like dark magic, but I swear i will be commenting how everything works as soon as i can.
 # - Esteban

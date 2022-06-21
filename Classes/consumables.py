@@ -37,7 +37,6 @@ class CannedFood(Entity):
         """
 
         Entity.__init__(self, coord, sprite, index, args)
-        self.__player_stats = player_stats
         self.interactable = True
 
     def eat(self):

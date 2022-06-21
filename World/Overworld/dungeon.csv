@@ -1,5 +1,3 @@
 ID,left,right,up,down,
-house,,,hallway,,
-hallway,end,,secret,house,
-secret,,,,hallway,
-end,,hallway,,,
+demostart,,,demohallway,,
+demohallway,,,,demostart,
