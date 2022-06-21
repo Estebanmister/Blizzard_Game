@@ -42,33 +42,40 @@ Sound = Sounds()
 Sound.play_music("menu.wav")
 
 last_interaction_counter = 0
+class UI():
+    def __init__(self):
+        pass
+    def toggleMenu(self):
+        global gamePaused
+        if gamePaused == True:
+            gamePaused = False
+        else:
+            gamePaused = True
+            self.clearText()
+            self.showMenu()
+            
+    def showMenu(self):
+        if gamePaused == True:
+            self.clearText()
+            screen.fill(black)
+            self.drawText("MENU",font,white,width/2,0)
+    #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
+    def drawText(self, text, font, text_col,x,y):
+        img = font.render(text,True, text_col)
+        screen.blit(img, (x,y))
+    def quickText(self,textToFill):
+        global textOnScreen
+        self.drawText(textToFill,font,white,0,(height/4)*3)
+        textOnScreen = textToFill
+    def clearText(self):
+        global textOnScreen
+        textOnScreen = ''
+    def displayUI(self):
+        self.drawText(textToFill,font,white,0,(height/4)*3)
 
-def drawText(text, font, text_col,x,y):
-    img = font.render(text,True, text_col)
-    screen.blit(img, (x,y))
-
-def quickText(textToFill):
-    global textOnScreen
-
-    Visual.text_label.show()
-    Visual.text_label.set_text(textToFill)
+gameUI = UI()
 
 
-    # if textOnScreen != '':
-    #     drawText(textToFill,font,white,0,(height/4)*3)
-    #     textOnScreen = textToFill
-    # else:
-    #     pass
-
-def clearText():
-    global textOnScreen
-
-    Visual.text_label.hide()    
-    textOnScreen = ''
-
-def displayMenu():
-    screen.fill(black)
-    drawText("MENU",font,white,width/2,0)
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
