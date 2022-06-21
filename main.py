@@ -61,18 +61,25 @@ class UI():
             screen.fill(black)
             self.drawText("MENU",font,white,width/2,0)
     #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
-    def drawText(self, text, font, text_col,x,y):
-        img = font.render(text,True, text_col)
-        screen.blit(img, (x,y))
+    def drawText(self,textToFill, x,y):
+        global textOnScreen
+        if Visual.drawlabel != None:
+            Visual.drawlabel.kill()
+
+        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textOnScreen, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
+        if textOnScreen == "":
+            Visual.drawlabel.hide()
+        else:
+            Visual.drawlabel.show()
     def quickText(self,textToFill):
         global textOnScreen
-        self.drawText(textToFill,font,white,0,(height/4)*3)
-        textOnScreen = textToFill
+        self.drawText(textToFill,0,(height/4)* 3)
+        textToFill = textOnScreen
     def clearText(self):
         global textOnScreen
         textOnScreen = ''
     def displayUI(self):
-        self.drawText(textToFill,font,white,0,(height/4)*3)
+        self.drawText(textToFill,0,(height/4)*3)
 
 gameUI = UI()
 
@@ -85,7 +92,7 @@ class playerStatsController():
         if 'demo' in currentScene.ID:
             player_stats.reduce_sanity(0.005,0.01)
         else:
-            player_stats.add_sanity(0.1)
+            player_stats.add_sanity(0.01)
 
 managePlayer = playerStatsController()
 
@@ -143,8 +150,7 @@ def player_input(keys_pressed):
         command_to_do = player_obj.interact_with()
         if command_to_do == None:
             if textOnScreen == '':
-                textOnScreen = "There's nothing to interact with here"
-                gameUI.quickText(textOnScreen)
+                gameUI.quickText("There's nothing to interact with here")
             else:
                 gameUI.clearText()
         if command_to_do is not None:
