@@ -19,7 +19,7 @@ class Sounds:
         if self.current_track != None:
             self.current_track.fadeout(1000)
 
-        self.current_track = pygame.mixer.Sound("Assets\\Music\\" + track)
+        self.current_track = pygame.mixer.Sound("Assets/Music/" + track)
         self.current_track.set_volume(self.music_volume)
         self.current_track.play(loops=-1, fade_ms=1000)
 
