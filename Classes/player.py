@@ -184,7 +184,7 @@ class Player(Entity):
             # If we ended up with a closest entity, then interact with it
             # and return any commands it might have for the frontend
             if isinstance(closest_entity,WaterBottle):
-                self.stats.add_hunger(closest_entity.drink())
+                self.stats.add_thrist(closest_entity.drink())
             elif isinstance(closest_entity,CannedFood):
                 self.stats.add_hunger(closest_entity.eat())
             return closest_entity.interact()
