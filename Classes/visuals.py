@@ -17,7 +17,7 @@ class Visuals():
         self.player_stats_textbox.hide()
 
     def make_framework(self):
-        self.ui_manager = pygame_gui.UIManager((self.window_width, self.window_height), "Assets\\theme.json", True) #manages the elements onscreen
+        self.ui_manager = pygame_gui.UIManager((self.window_width, self.window_height), "Assets/theme.json", True) #manages the elements onscreen
 
         self.title_container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(self.window_width,self.window_height)),manager=self.ui_manager) #a group we can contain the elements within. We use these since the containers can be hidden/shown as we wish.
         self.game_container = pygame_gui.core.UIContainer(relative_rect=pygame.Rect((0,0),(self.window_width,self.window_height)),manager=self.ui_manager)
