@@ -22,7 +22,7 @@
             "text_vert_alignment": "top"
         }
     },
-    "label":
+    "@title":
     {
         "colours": {
             "normal_text": "#ffffff",
@@ -38,11 +38,30 @@
         },
         "misc":
         {
-            "padding": "15,15",
-            "border_width": "2",
             "shadow_width": "0",
             "text_horiz_alignment": "center",
             "text_vert_alignment": "top"
+        }
+    },    
+    "label":
+    {
+        "colours": {
+            "normal_text": "#ffffff",
+            "dark_bg": "#00000070",
+            "text_shadow": "#555555"
+        },
+        "font": {
+            "name": "BebasNeue",
+            "size": "24",
+            "bold": "0",
+            "italic": "0",
+            "regular_path": "Assets\\BebasNeue.ttf"
+        },
+        "misc":
+        {
+            "text_shadow_size": "2",
+            "text_horiz_alignment": "center",
+            "text_vert_alignment": "center"
         }
     },
     "button":
