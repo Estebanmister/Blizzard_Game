@@ -158,7 +158,7 @@ class Player(Entity):
         Call everytime the player clicks the interact button, they will interact with the closest entity
         todo: make it so it interacts with the entity IN FRONT of the player instead
         """
-        RANGE = 1
+        RANGE = 2
         closest_entity = None
         # For every entity
         for entity in self.scene.get_all_entities():

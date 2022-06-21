@@ -9,7 +9,7 @@ from Classes.sounds import *
 #define some variables, what FPS game will run at
 #basic colour tuples to make writing colours easier
 #set desired width and height game will run at later
-FPS = 60
+FPS = 120
 black = (0,0,0)
 white = (255, 255, 255)
 width, height = 700, 700
@@ -41,7 +41,7 @@ Visual = Visuals(width, height, player_stats.get_stats())
 Sound = Sounds()
 Sound.play_music("menu.wav")
 
-
+last_interaction_counter = 0
 
 def drawText(text, font, text_col,x,y):
     img = font.render(text,True, text_col)
@@ -78,9 +78,11 @@ def player_input(keys_pressed):
     global scale
     global gamePaused
     global textOnScreen
+    global tempsurf
+    global last_interaction_counter
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        if textOnScreen == '' and not gamePaused:
+        if not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
             elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
@@ -109,7 +111,8 @@ def player_input(keys_pressed):
             pygame.time.delay(650)
         
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
-    if keys_pressed[pygame.K_e]:
+    if keys_pressed[pygame.K_e] and last_interaction_counter == 0:
+        last_interaction_counter = 20
         command_to_do = player_obj.interact_with()
         if command_to_do == None:
             if textOnScreen == '':
@@ -117,6 +120,30 @@ def player_input(keys_pressed):
                 quickText(textOnScreen)
             else:
                 clearText()
+        if command_to_do is not None:
+            if command_to_do.split(' ')[0] == 'EXIT':
+                newdungeon = command_to_do.split(' ')[1]
+                print("MOVING TO " + newdungeon)
+                currentDungeon = load_dungeon(newdungeon)
+                currentScene = currentDungeon.head
+                player_obj = currentScene.get_entity('Player0')
+                player_obj.stats = player_stats
+                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                for entity in currentScene.get_all_entities():
+                    if "CollisionEntity" in entity.ID:
+                        coordinateDraw = entity.coord
+                        sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+                        if currentScene.width > currentScene.length:
+                            tempsurf.blit(sprite, (
+                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                 coordinateDraw[1] * scale)))
+                        if currentScene.length > currentScene.width:
+                            tempsurf.blit(sprite, (
+                                (coordinateDraw[0] * scale,
+                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                        if currentScene.length == currentScene.width:
+                            tempsurf.blit(sprite,
+                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'MOVE':
                 print(command_to_do.split(' ')[1])
@@ -129,6 +156,7 @@ def player_input(keys_pressed):
                     scX = width/currentScene.width
                     scY = height/currentScene.length
                     scale = min(scX,scY)
+                    tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                     # Cache all of the walls inside of a surface
                     for entity in currentScene.get_all_entities():
                         if "CollisionEntity" in entity.ID:
@@ -146,8 +174,9 @@ def player_input(keys_pressed):
                                 tempsurf.blit(sprite,
                                               (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
 
-        pygame.time.delay(400)
-
+        pygame.time.delay(100)
+    elif keys_pressed[pygame.K_e]:
+        last_interaction_counter -= 1
 def Main():
     run = True
     
