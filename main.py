@@ -23,7 +23,7 @@ scY = 0
 scX = 0
 scale = 0
 #imports from other files, scene, player object
-currentDungeon = load_dungeon('World/Dungeons')
+currentDungeon = load_dungeon('World/Overworld')
 currentScene = currentDungeon.head
 
 player_obj = currentScene.get_entity('Player0')
@@ -154,11 +154,16 @@ def player_input(keys_pressed):
             else:
                 gameUI.clearText()
         if command_to_do is not None:
+            if command_to_do.split(' ')[0] == 'DISPLAY':
+                clearText()
+                textOnScreen = ' '.join(command_to_do.split(' ')[1:])
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
                 print("MOVING TO " + newdungeon)
                 currentDungeon = load_dungeon(newdungeon)
                 currentScene = currentDungeon.head
+                if currentScene.music != None and currentScene.music != '':
+                    Sound.play_music(currentScene.music)
                 player_obj = currentScene.get_entity('Player0')
                 player_obj.stats = player_stats
                 tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
@@ -177,12 +182,13 @@ def player_input(keys_pressed):
                         if currentScene.length == currentScene.width:
                             tempsurf.blit(sprite,
                                           (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-        if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'MOVE':
                 print(command_to_do.split(' ')[1])
                 middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
                 if middle_scene != None:
                     currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
+                    if currentScene.music != None and currentScene.music != '':
+                        Sound.play_music(currentScene.music)
                     player_obj = currentScene.get_entity('Player0')
                     player_obj.stats = player_stats
                     print(currentScene.ID)
@@ -264,14 +270,16 @@ def Main():
                         Visual.screen = "game"
                         Visual.title_container.hide()
                         Visual.player_stats_textbox.show()
-                        Sound.play_music("music.wav")
+                        if currentScene.music != None and currentScene.music != '':
+                            Sound.play_music(currentScene.music)
                         pass
 
                     elif event.ui_element == Visual.newgame_button:
                         Visual.screen = "game"
                         Visual.title_container.hide()
                         Visual.player_stats_textbox.show()
-                        Sound.play_music("music.wav")
+                        if currentScene.music != None and currentScene.music != '':
+                            Sound.play_music(currentScene.music)
                         pass
 
                 Visual.ui_manager.process_events(event)
