@@ -43,32 +43,58 @@ Sound.play_music("menu.wav")
 
 last_interaction_counter = 0
 
-def drawText(text, font, text_col,x,y):
-    img = font.render(text,True, text_col)
-    screen.blit(img, (x,y))
+class UI():
+    def __init__(self):
+        pass
+    def toggleMenu(self):
+        global gamePaused
+        if gamePaused == True:
+            gamePaused = False
+        else:
+            gamePaused = True
+            self.clearText()
+            self.showMenu()
+            
+    def showMenu(self):
+        if gamePaused == True:
+            self.clearText()
+            screen.fill(black)
+            self.drawText("MENU",font,white,width/2,0)
+    #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
+    def drawText(self,textToFill, x,y):
+        global textOnScreen
+        if Visual.drawlabel != None:
+            Visual.drawlabel.kill()
 
-def quickText(textToFill):
-    global textOnScreen
+        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textOnScreen, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
+        if textOnScreen == "":
+            Visual.drawlabel.hide()
+        else:
+            Visual.drawlabel.show()
+    def quickText(self,textToFill):
+        global textOnScreen
+        self.drawText(textToFill,0,(height/4)* 3)
+        textToFill = textOnScreen
+    def clearText(self):
+        global textOnScreen
+        textOnScreen = ''
+    def displayUI(self):
+        self.drawText(textToFill,0,(height/4)*3)
 
-    Visual.text_label.show()
-    Visual.text_label.set_text(textToFill)
+gameUI = UI()
 
+class playerStatsController():
+    def __init__(self):
+        pass
+    def reduceStats(self):
+        player_stats.reduce_hunger(0.0002,0.002)
+        player_stats.reduce_thirst(0.0003,0.004)
+        if 'demo' in currentScene.ID:
+            player_stats.reduce_sanity(0.005,0.01)
+        else:
+            player_stats.add_sanity(0.01)
 
-    # if textOnScreen != '':
-    #     drawText(textToFill,font,white,0,(height/4)*3)
-    #     textOnScreen = textToFill
-    # else:
-    #     pass
-
-def clearText():
-    global textOnScreen
-
-    Visual.text_label.hide()    
-    textOnScreen = ''
-
-def displayMenu():
-    screen.fill(black)
-    drawText("MENU",font,white,width/2,0)
+managePlayer = playerStatsController()
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
@@ -85,20 +111,28 @@ def player_input(keys_pressed):
         if not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
                 player_obj.move("up-right")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_a]:
                 player_obj.move("down-left")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_d]:
                 player_obj.move("down-right")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_w]:
                 player_obj.move('down')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_a]:
                 player_obj.move('left')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s]:
                 player_obj.move('up')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_d]:
                 player_obj.move('right')
+                managePlayer.reduceStats()
     else:
         player_obj.move("none")
     #Open the Menu and Pause the game
@@ -116,10 +150,9 @@ def player_input(keys_pressed):
         command_to_do = player_obj.interact_with()
         if command_to_do == None:
             if textOnScreen == '':
-                textOnScreen = "There's nothing to interact with here"
-                quickText(textOnScreen)
+                gameUI.quickText("There's nothing to interact with here")
             else:
-                clearText()
+                gameUI.clearText()
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
@@ -256,15 +289,15 @@ def Main():
             player_input(keys_pressed)
             
             if gamePaused == True:
-                displayMenu()
-                clearText()
+                gameUI.toggleMenu()
+                gameUI.clearText()
             else:
                 draw_display(currentScene)
                 currentScene.update_all()
             if textOnScreen == '':
                 pass
             else:
-                quickText(textOnScreen)
+                gameUI.quickText(textOnScreen)
             pygame.display.update()
 
 

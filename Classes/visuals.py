@@ -6,7 +6,7 @@ class Visuals():
         self.window_width = width #display width and height
         self.window_height = height #display width and height
         self.player_stats = None
-
+        self.drawlabel = None
 
         self.make_framework()
         self.make_title()
