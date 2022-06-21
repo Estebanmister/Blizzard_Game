@@ -42,6 +42,7 @@ Sound = Sounds()
 Sound.play_music("menu.wav")
 
 last_interaction_counter = 0
+
 class UI():
     def __init__(self):
         pass
@@ -124,9 +125,9 @@ def player_input(keys_pressed):
         if command_to_do == None:
             if textOnScreen == '':
                 textOnScreen = "There's nothing to interact with here"
-                quickText(textOnScreen)
+                gameUI.quickText(textOnScreen)
             else:
-                clearText()
+                gameUI.clearText()
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
@@ -263,15 +264,15 @@ def Main():
             player_input(keys_pressed)
             
             if gamePaused == True:
-                displayMenu()
-                clearText()
+                gameUI.displayMenu()
+                gameUI.clearText()
             else:
                 draw_display(currentScene)
                 currentScene.update_all()
             if textOnScreen == '':
                 pass
             else:
-                quickText(textOnScreen)
+                gameUI.quickText(textOnScreen)
             pygame.display.update()
 
 
