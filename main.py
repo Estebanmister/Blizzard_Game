@@ -1,11 +1,10 @@
-from email.mime.nonmultipart import MIMENonMultipart
-from msilib.schema import Class
-from random import sample
 import pygame
 from data_loader import *
 from Classes.player_stats import *
 from math import sin, cos, radians
 import math
+from Classes.visuals import *
+from Classes.sounds import *
 
 #define some variables, what FPS game will run at
 #basic colour tuples to make writing colours easier
@@ -17,6 +16,7 @@ width, height = 700, 700
 gamePaused = False
 textOnScreen = ''
 tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
+
 
 #calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
@@ -30,41 +30,45 @@ player_obj = currentScene.get_entity('Player0')
 player_stats = PlayerStats()
 player_obj.stats = player_stats
 #set our screen size
+pygame.init()
 screen = pygame.display.set_mode((width,height))
 pygame.display.set_icon(pygame.image.load("Assets/Sprites/playerdown.png"))
 ##########################################################################
 pygame.font.init()
+
 font = pygame.font.SysFont('arial',40)
+Visual = Visuals(width, height, player_stats.get_stats())
+Sound = Sounds()
+Sound.play_music("menu.wav")
 
 
-class UI():
-    def __init__(self):
-        pass
-    def toggleMenu(self):
-        global gamePaused
-        if gamePaused == True:
-            gamePaused = False
-        else:
-            gamePaused = True
-        if gamePaused == True:
-            screen.fill(black)
-            self.drawText("MENU",font,white,width/2,0)
-    #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
-    def drawText(self, text, font, text_col,x,y):
-        img = font.render(text,True, text_col)
-        screen.blit(img, (x,y))
-    def quickText(self,textToFill):
-        global textOnScreen
-        self.drawText(textToFill,font,white,0,(height/4)*3)
-        textOnScreen = textToFill
-    def clearText(self):
-        global textOnScreen
-        textOnScreen = ''
-    def displayUI(self):
-        self.drawText(textToFill,font,white,0,(height/4)*3)
 
-gameUI = UI()
+def drawText(text, font, text_col,x,y):
+    img = font.render(text,True, text_col)
+    screen.blit(img, (x,y))
 
+def quickText(textToFill):
+    global textOnScreen
+
+    Visual.text_label.show()
+    Visual.text_label.set_text(textToFill)
+
+
+    # if textOnScreen != '':
+    #     drawText(textToFill,font,white,0,(height/4)*3)
+    #     textOnScreen = textToFill
+    # else:
+    #     pass
+
+def clearText():
+    global textOnScreen
+
+    Visual.text_label.hide()    
+    textOnScreen = ''
+
+def displayMenu():
+    screen.fill(black)
+    drawText("MENU",font,white,width/2,0)
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
@@ -74,10 +78,9 @@ def player_input(keys_pressed):
     global scale
     global gamePaused
     global textOnScreen
-    global tempsurf
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        if not gamePaused:
+        if textOnScreen == '' and not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
             elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
@@ -98,8 +101,12 @@ def player_input(keys_pressed):
         player_obj.move("none")
     #Open the Menu and Pause the game
     if keys_pressed[pygame.K_ESCAPE]:
-        gameUI.toggleMenu()
-        pygame.time.delay(650)
+        if gamePaused == False:
+            gamePaused = True
+            pygame.time.delay(650)
+        else:
+            gamePaused = False
+            pygame.time.delay(650)
         
     #Make feature to capture the MOVE up, SAY xyz, MOVE down...
     if keys_pressed[pygame.K_e]:
@@ -107,33 +114,10 @@ def player_input(keys_pressed):
         if command_to_do == None:
             if textOnScreen == '':
                 textOnScreen = "There's nothing to interact with here"
-                gameUI.quickText(textOnScreen)
+                quickText(textOnScreen)
             else:
-                gameUI.clearText()
+                clearText()
         if command_to_do is not None:
-            if command_to_do.split(' ')[0] == 'EXIT':
-                newdungeon = command_to_do.split(' ')[1]
-                print("MOVING TO " + newdungeon)
-                currentDungeon = load_dungeon(newdungeon)
-                currentScene = currentDungeon.head
-                player_obj = currentScene.get_entity('Player0')
-                player_obj.stats = player_stats
-                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
-                for entity in currentScene.get_all_entities():
-                    if "CollisionEntity" in entity.ID:
-                        coordinateDraw = entity.coord
-                        sprite = pygame.transform.scale(entity.sprite, (scale, scale))
-                        if currentScene.width > currentScene.length:
-                            tempsurf.blit(sprite, (
-                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
-                                 coordinateDraw[1] * scale)))
-                        if currentScene.length > currentScene.width:
-                            tempsurf.blit(sprite, (
-                                (coordinateDraw[0] * scale,
-                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
-                        if currentScene.length == currentScene.width:
-                            tempsurf.blit(sprite,
-                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
             if command_to_do.split(' ')[0] == 'MOVE':
                 print(command_to_do.split(' ')[1])
                 middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
@@ -145,7 +129,6 @@ def player_input(keys_pressed):
                     scX = width/currentScene.width
                     scY = height/currentScene.length
                     scale = min(scX,scY)
-                    tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                     # Cache all of the walls inside of a surface
                     for entity in currentScene.get_all_entities():
                         if "CollisionEntity" in entity.ID:
@@ -163,10 +146,9 @@ def player_input(keys_pressed):
                                 tempsurf.blit(sprite,
                                               (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
 
-        pygame.time.delay(100)
+        pygame.time.delay(400)
 
 def Main():
-    clock = pygame.time.Clock()
     run = True
     
     global keys_pressed
@@ -178,7 +160,9 @@ def Main():
     global gamePaused
     global textOnScreen
     global start_time
+    global clock
 
+    clock = pygame.time.Clock()
     scX = width/currentScene.width
     scY = height/currentScene.length
     scale = scX
@@ -202,25 +186,57 @@ def Main():
                 tempsurf.blit(sprite,
                               (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
     while run:
-        clock.tick(FPS)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            keys_pressed = pygame.key.get_pressed()
-        player_input(keys_pressed)
-        
-        if gamePaused == True:
-            gameUI.displayMenu()
-            gameUI.clearText()
-        else:
+        if Visual.screen == "title":
+            clock.tick(FPS)/1000 
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+                if event.type == pygame_gui.UI_BUTTON_START_PRESS:
+                    if event.ui_element == Visual.quit_button:
+                        pygame.quit()
+                        quit()
+
+                    elif event.ui_element == Visual.continue_button:
+                        Visual.screen = "game"
+                        Visual.title_container.hide()
+                        Visual.player_stats_textbox.show()
+                        Sound.play_music("music.wav")
+                        pass
+
+                    elif event.ui_element == Visual.newgame_button:
+                        Visual.screen = "game"
+                        Visual.title_container.hide()
+                        Visual.player_stats_textbox.show()
+                        Sound.play_music("music.wav")
+                        pass
+
+                Visual.ui_manager.process_events(event)
+            
             draw_display(currentScene)
-            currentScene.update_all()
-        if textOnScreen == '':
-            pass
-        else:
-            gameUI.quickText(textOnScreen)
-        #gameUI.displayUI()
-        pygame.display.update()
+            pygame.display.update()
+
+
+        elif Visual.screen == "game":
+            clock.tick(FPS)
+            keys_pressed = pygame.key.get_pressed()  #put this here since player_input wont work if the var isn't defined.
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+            player_input(keys_pressed)
+            
+            if gamePaused == True:
+                displayMenu()
+                clearText()
+            else:
+                draw_display(currentScene)
+                currentScene.update_all()
+            if textOnScreen == '':
+                pass
+            else:
+                quickText(textOnScreen)
+            pygame.display.update()
 
 
 def rotate_center(image, angle):
@@ -232,50 +248,57 @@ def rotate_center(image, angle):
     rot_image = rot_image.subsurface(rot_rect).copy()
     return rot_image
 
-
 def draw_display(scene):
     global tempsurf
 
     screen.fill(black)
-    #Y axis is width, X axis is length
-    #first moves +right -left, second moves +down -up. 
-    if scene.width > scene.length:
-        # Vertical rooms
-        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scX)),((width - (scX * scene.length))/2,0))
-    if scene.length > scene.width:
-        # Horizontal rooms
-        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scY, scene.width * scY)),(0,(height - (scY * scene.width))/2))
-    if scene.length == scene.width:
-        screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0))
-    #last ones below are (0,0) as a fallback
-    # screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0)) 
-    for entity in scene.get_all_entities():
-        angle = 0
-        coordinateDraw = entity.coord
-        if 'Enemy' in entity.ID:
-            angle = entity.angle_of_sight
-            compx = sin(radians(entity.angle_of_sight))
-            compy = cos(radians(entity.angle_of_sight))
+    Visual.ui_manager.update(clock.tick(FPS)/1000) #updates information on the ui elements
+    
+    if Visual.screen == "game":
+        Visual.update_stat_display(player_stats.get_stats())
 
-            for s in range(entity.stopped_at+1):
-                x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length))/2)
-                y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width))/2)
-                if entity.hit:
-                    pygame.draw.circle(screen, (255,0,0), (x,y), 3)
-                elif s:
-                    pygame.draw.circle(screen, white, (x, y), 3)
-        if 'CollisionEntity' not in entity.ID:
-            sprite = pygame.transform.scale(entity.sprite, (scale, scale))
-            if scene.width > scene.length:
-                screen.blit(rotate_center(sprite, angle), (
-                ((coordinateDraw[0] * scale + (width - (scX * scene.length)) / 2), coordinateDraw[1] * scale)))
-            if scene.length > scene.width:
-                screen.blit(rotate_center(sprite, angle), (
-                (coordinateDraw[0] * scale, (coordinateDraw[1] * scale + (height - (scY * scene.width)) / 2))))
-            if scene.length == scene.width:
-                screen.blit(rotate_center(sprite, angle),
-                            (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-    screen.blit(tempsurf, (0, 0))
+
+        #Y axis is width, X axis is length
+        #first moves +right -left, second moves +down -up. 
+        if scene.width > scene.length:
+            # Vertical rooms
+            screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scX)),((width - (scX * scene.length))/2,0))
+        if scene.length > scene.width:
+            # Horizontal rooms
+            screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scY, scene.width * scY)),(0,(height - (scY * scene.width))/2))
+        if scene.length == scene.width:
+            screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0))
+        #last ones below are (0,0) as a fallback
+        # screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0)) 
+        for entity in scene.get_all_entities():
+            angle = 0
+            coordinateDraw = entity.coord
+            if 'Enemy' in entity.ID:
+                angle = entity.angle_of_sight
+                compx = sin(radians(entity.angle_of_sight))
+                compy = cos(radians(entity.angle_of_sight))
+
+                for s in range(entity.stopped_at+1):
+                    x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length))/2)
+                    y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width))/2)
+                    if entity.hit:
+                        pygame.draw.circle(screen, (255,0,0), (x,y), 3)
+                    elif s:
+                        pygame.draw.circle(screen, white, (x, y), 3)
+            if 'CollisionEntity' not in entity.ID:
+                sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+                if scene.width > scene.length:
+                    screen.blit(rotate_center(sprite, angle), (
+                    ((coordinateDraw[0] * scale + (width - (scX * scene.length)) / 2), coordinateDraw[1] * scale)))
+                if scene.length > scene.width:
+                    screen.blit(rotate_center(sprite, angle), (
+                    (coordinateDraw[0] * scale, (coordinateDraw[1] * scale + (height - (scY * scene.width)) / 2))))
+                if scene.length == scene.width:
+                    screen.blit(rotate_center(sprite, angle),
+                                (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
+        
+        screen.blit(tempsurf, (0, 0))
+    Visual.ui_manager.draw_ui(screen) #displays the ui elements
 
 
 #run the program
