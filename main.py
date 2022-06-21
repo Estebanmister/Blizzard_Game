@@ -9,6 +9,7 @@ from Classes.sounds import *
 #define some variables, what FPS game will run at
 #basic colour tuples to make writing colours easier
 #set desired width and height game will run at later
+showtext = False
 FPS = 120
 black = (0,0,0)
 white = (255, 255, 255)
@@ -16,6 +17,7 @@ width, height = 700, 700
 gamePaused = False
 textOnScreen = ''
 tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
+
 
 
 #calculate the sprite scale using screen -- calculation is done in Main()
@@ -62,15 +64,22 @@ class UI():
             self.drawText("MENU",font,white,width/2,0)
     #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
     def drawText(self,textToFill, x,y):
-        global textOnScreen
+        global showtext
+        
+        if textOnScreen == "":
+            showtext = not showtext
+
         if Visual.drawlabel != None:
             Visual.drawlabel.kill()
 
-        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textOnScreen, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
-        if textOnScreen == "":
-            Visual.drawlabel.hide()
-        else:
+        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
+
+        if showtext:
             Visual.drawlabel.show()
+        else:
+            Visual.drawlabel.hide()
+    
+
     def quickText(self,textToFill):
         global textOnScreen
         self.drawText(textToFill,0,(height/4)* 3)
