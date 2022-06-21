@@ -76,7 +76,18 @@ class UI():
 
 gameUI = UI()
 
+class playerStatsController():
+    def __init__(self):
+        pass
+    def reduceStats(self):
+        player_stats.reduce_hunger(0.0002,0.002)
+        player_stats.reduce_thirst(0.0003,0.004)
+        if 'demo' in currentScene.ID:
+            player_stats.reduce_sanity(0.005,0.01)
+        else:
+            player_stats.add_sanity(0.1)
 
+managePlayer = playerStatsController()
 
 #Stagger player movement, to prevent spam and ultra fast movement
 def player_input(keys_pressed):
@@ -93,20 +104,28 @@ def player_input(keys_pressed):
         if not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
                 player_obj.move("up-right")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_a]:
                 player_obj.move("down-left")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_d]:
                 player_obj.move("down-right")
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_w]:
                 player_obj.move('down')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_a]:
                 player_obj.move('left')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_s]:
                 player_obj.move('up')
+                managePlayer.reduceStats()
             elif keys_pressed[pygame.K_d]:
                 player_obj.move('right')
+                managePlayer.reduceStats()
     else:
         player_obj.move("none")
     #Open the Menu and Pause the game
@@ -264,7 +283,7 @@ def Main():
             player_input(keys_pressed)
             
             if gamePaused == True:
-                gameUI.displayMenu()
+                gameUI.toggleMenu()
                 gameUI.clearText()
             else:
                 draw_display(currentScene)
