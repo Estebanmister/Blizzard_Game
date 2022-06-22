@@ -5,7 +5,6 @@ from math import sin, cos, radians
 import math
 from Classes.visuals import *
 from Classes.sounds import *
-
 #define some variables, what FPS game will run at
 #basic colour tuples to make writing colours easier
 #set desired width and height game will run at later
@@ -160,6 +159,9 @@ def player_input(keys_pressed):
                     Sound.play_music(currentScene.music)
                 player_obj = currentScene.get_entity('Player0')
                 player_obj.stats = player_stats
+                scX = width / currentScene.width
+                scY = height / currentScene.length
+                scale = min(scX, scY)
                 tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
                     if "CollisionEntity" in entity.ID:
@@ -223,7 +225,7 @@ def Main():
     global clock
     global text_counter
     global tempsurf
-    
+
     clock = pygame.time.Clock()
     scX = width/currentScene.width
     scY = height/currentScene.length
@@ -291,6 +293,9 @@ def Main():
                     Sound.play_music(currentScene.music)
                 player_obj = currentScene.get_entity('Player0')
                 player_obj.stats = player_stats
+                scX = width / currentScene.width
+                scY = height / currentScene.length
+                scale = min(scX, scY)
                 tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
                     if "CollisionEntity" in entity.ID:

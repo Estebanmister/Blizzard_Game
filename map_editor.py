@@ -76,10 +76,12 @@ while run:
             createScene()
         if keys[pygame.K_v]:
             if count == 0:
+
                 i += 1
                 if i > len(types)-1:
                     i = 0
                 entity['type'] = types[i]
+                entity['args'] = ""
                 print("ENTITY TYPE: " + types[i])
                 count = 50
             else:

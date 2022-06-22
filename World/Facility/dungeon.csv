@@ -1,2 +1,6 @@
 ID,left,right,up,down,
-start,,,,,
+start,,,hallway,,
+hallway,,,warehouse,start,
+warehouse,,consum,exit,hallway,
+consum,warehouse,,,,
+exit,,,,warehouse,

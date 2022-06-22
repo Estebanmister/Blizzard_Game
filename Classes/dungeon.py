@@ -1,16 +1,20 @@
-
+last_id = []
 def compare(scene, ID):
     """
     Find a specific scene on the fourth level graph, by recursively scanning all branching paths
     Efficiency : O(n) = 4^n
-    TODO: There is a slight change to get into an infinite loop, so please don't depend on this
     :param scene: (Scene) where to start searching
     :param ID: (String) ID of scene to find
     :return: (Scene) or False
     """
+    global last_id
     if scene is None:
         # If there is no actual scene, then no searching needs to be done
         return False
+
+    if scene.ID in last_id:
+        return False
+    last_id.append(scene.ID)
     if scene.ID == ID:
         # If our scene matches the ID, return it
         return scene
@@ -43,4 +47,6 @@ class Dungeon:
         :param ID: (String)
         :return: (Scene) or False
         """
+        global last_id
+        last_id = []
         return compare(self.head, ID)
