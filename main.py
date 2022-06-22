@@ -25,6 +25,7 @@ scale = 0
 #imports from other files, scene, player object
 currentDungeon = load_dungeon('World/Overworld')
 currentScene = currentDungeon.head
+dungeonDirectory = 'World/Overworld'
 
 player_obj = currentScene.get_entity('Player0')
 player_stats = PlayerStats()
@@ -100,6 +101,7 @@ def player_input(keys_pressed):
     global gamePaused
     global tempsurf
     global last_interaction_counter
+    global dungeonDirectory
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
         if not gamePaused:
@@ -150,6 +152,7 @@ def player_input(keys_pressed):
                 gameUI.quickText(' '.join(command_to_do.split(' ')[1:]))
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
+                dungeonDirectory = newdungeon
                 print("MOVING TO " + newdungeon)
                 currentDungeon = load_dungeon(newdungeon)
                 currentScene = currentDungeon.head
@@ -217,10 +220,10 @@ def Main():
     global scY, scX
     global scale
     global gamePaused
-    global start_time
     global clock
     global text_counter
-
+    global tempsurf
+    
     clock = pygame.time.Clock()
     scX = width/currentScene.width
     scY = height/currentScene.length
@@ -274,7 +277,32 @@ def Main():
                         pass
 
                 Visual.ui_manager.process_events(event)
-            
+            if not player_obj.stats.health:
+                #respawn
+                print("YOOOOOO")
+                print("MOVING TO " + dungeonDirectory)
+                currentDungeon = load_dungeon(dungeonDirectory)
+                currentScene = currentDungeon.head
+                if currentScene.music != None and currentScene.music != '':
+                    Sound.play_music(currentScene.music)
+                player_obj = currentScene.get_entity('Player0')
+                player_obj.stats = player_stats
+                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                for entity in currentScene.get_all_entities():
+                    if "CollisionEntity" in entity.ID:
+                        coordinateDraw = entity.coord
+                        sprite = pygame.transform.scale(entity.sprite, (scale, scale))
+                        if currentScene.width > currentScene.length:
+                            tempsurf.blit(sprite, (
+                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                 coordinateDraw[1] * scale)))
+                        if currentScene.length > currentScene.width:
+                            tempsurf.blit(sprite, (
+                                (coordinateDraw[0] * scale,
+                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                        if currentScene.length == currentScene.width:
+                            tempsurf.blit(sprite,
+                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
             draw_display(currentScene)
             pygame.display.update()
 
@@ -289,7 +317,6 @@ def Main():
             
             if gamePaused == True:
                 gameUI.toggleMenu()
-                gameUI.clearText()
             else:
                 draw_display(currentScene)
                 currentScene.update_all()

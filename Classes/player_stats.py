@@ -48,7 +48,7 @@ class PlayerStats:
 
         # If starting a new game, initialize variables
         if new_game:
-            self.__health = True
+            self.health = True
             self.__scene_id = scene_id
 
             # Default the first_scene_id to scene_id on load
@@ -91,7 +91,7 @@ class PlayerStats:
 
         # Set the header, save the values accordingly
         fields = ["health", "scene_id", "first_scene_id", "hunger", "thirst", "sanity"]
-        stats = {"health": self.__health,
+        stats = {"health": self.health,
                  "scene_id": self.__scene_id,
                  "first_scene_id": self.__first_scene_id,
                  "hunger": round(self.__hunger, 3),
@@ -113,7 +113,7 @@ class PlayerStats:
         with open(filename, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for line in reader:
-                self.__health = line["health"]
+                self.health = line["health"]
                 self.__scene_id = line["scene_id"]
                 self.__first_scene_id = line["first_scene_id"]
                 self.__hunger = float(line["hunger"])
@@ -127,7 +127,7 @@ class PlayerStats:
         :return: A dictionary, with each player stat (health, scene_id, first_scene_id, hunger, thirst, sanity)
          listed in the form of stat_name:value, numerical values rounded to one decimal place
         """
-        return {"health": self.__health,
+        return {"health": self.health,
                 "scene_id": self.__scene_id,
                 "first_scene_id": self.__first_scene_id,
                 "hunger": round(self.__hunger, 1),
@@ -161,16 +161,16 @@ class PlayerStats:
 
         # Set the player's health to False if any stat is zero
         if self.check_stats_for_zero():
-            self.__health = False
+            self.health = False
 
         # If player's health is False, return to first scene, change health to True
-        if not self.__health:
+        if not self.health:
             if self.__first_scene_id is not None:
                 # Only send the player back to the first scene if the first scene is set
                 self.__scene_id = self.__first_scene_id
 
             # Set health back to True
-            self.__health = True
+            self.health = True
 
             # Load initial stat back in
             self.read_file("../Player/initial_stats.csv")
@@ -178,7 +178,7 @@ class PlayerStats:
             return False
 
         # Returns the player's health status (Always True)
-        return self.__health
+        return self.health
 
     def set_alive(self, alive):
         """
@@ -187,7 +187,7 @@ class PlayerStats:
         :param alive: (bool) True if player is alive, False if not.
         """
 
-        self.__health = alive
+        self.health = alive
 
     def reduce_hunger(self, min_value, max_value):
         """
