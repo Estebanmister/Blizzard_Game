@@ -1,3 +1,6 @@
+# collisionentity.py
+# Esteban, Richard, Utkarsh, Sam
+# June 13, 2022
 from Classes.entity import Entity
 
 

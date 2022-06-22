@@ -1,3 +1,6 @@
+# player.py
+# Esteban, Richard, Utkarsh, Sam
+# June 10, 2022
 from Classes.consumables import WaterBottle, CannedFood
 from Classes.entity import Entity
 from math import sqrt
@@ -30,10 +33,10 @@ class Player(Entity):
         :param value: A float value
         :return: value-0.008
         """
-        if value-0.003>0:
-            return value-0.001
-        if value+0.003<0:
-            return value+0.001
+        if value - 0.003 > 0:
+            return value - 0.001
+        if value + 0.003 < 0:
+            return value + 0.001
         return 0
 
     def move(self, direction):
@@ -56,80 +59,103 @@ class Player(Entity):
         acceleration = 0.0003
 
         # Start up acceleration
-        if abs(self.x_vel)+abs(self.y_vel)<0.03:
-            acceleration=0.0013
+        if abs(self.x_vel) + abs(self.y_vel) < 0.03:
+            acceleration = 0.0013
 
         # Stop the player movement if no key down
         if direction == "none":
-            self.x_vel=self.deceleration(self.x_vel)
-            self.y_vel =self.deceleration(self.y_vel)
+            self.x_vel = self.deceleration(self.x_vel)
+            self.y_vel = self.deceleration(self.y_vel)
         # Each direction is interpreted by natural language
         if direction == "up":
 
             # If player is already moving in the opposite direction, stop that.
-            if self.y_vel<0:
-                self.y_vel=0
+            if self.y_vel < 0:
+                self.y_vel = 0
 
             # Stop player's movement on the other axis.
-            self.x_vel=0
+            self.x_vel = 0
             # Increase the acceleration in the right direction
             self.y_vel += acceleration
             if any(self.direction_sprites):
                 # If direction sprites are specified, then select the correct one to display
                 self.sprite = self.direction_sprites[1]
         elif direction == "down":
-            if self.y_vel>0:
-                self.y_vel=0
+            if self.y_vel > 0:
+                self.y_vel = 0
             self.x_vel = 0
             self.y_vel -= acceleration
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[0]
         elif direction == "left":
-            if self.x_vel>0:
-                self.x_vel=0
-            self.y_vel=0
+            if self.x_vel > 0:
+                self.x_vel = 0
+            self.y_vel = 0
             self.x_vel -= acceleration
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[2]
         elif direction == "right":
-            if self.x_vel<0:
-                self.x_vel=0
-            self.y_vel=0
+            if self.x_vel < 0:
+                self.x_vel = 0
+            self.y_vel = 0
             self.x_vel += acceleration
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[3]
         elif direction == "up-left":
-            if self.x_vel>0:
-                self.x_vel=0
-            if self.y_vel>0:
-                self.y_vel=0
+
+            # If the player is moving in opposite direction, stop that
+            if self.x_vel > 0:
+                self.x_vel = 0
+            if self.y_vel > 0:
+                self.y_vel = 0
+
+            # If player is already moving in 1 axis, synchronize speed on both axis
+            if self.x_vel < 0:
+                self.y_vel = self.x_vel
+            if self.y_vel < 0:
+                self.x_vel = self.y_vel
             self.x_vel -= (acceleration / 2)
             self.y_vel -= (acceleration / 2)
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[2]
         elif direction == "up-right":
-            if self.x_vel<0:
-                self.x_vel=0
-            if self.y_vel>0:
-                self.y_vel=0
+            if self.x_vel < 0:
+                self.x_vel = 0
+            if self.y_vel > 0:
+                self.y_vel = 0
+
+            if self.x_vel > 0:
+                self.y_vel = -self.x_vel
+            if self.y_vel < 0:
+                self.x_vel = -self.y_vel
             self.x_vel += (acceleration / 2)
             self.y_vel -= (acceleration / 2)
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[3]
         elif direction == "down-left":
-            if self.x_vel>0:
-                self.x_vel=0
-            if self.y_vel<0:
-                self.y_vel=0
+            if self.x_vel > 0:
+                self.x_vel = 0
+            if self.y_vel < 0:
+                self.y_vel = 0
+
+            if self.x_vel < 0:
+                self.y_vel = -self.x_vel
+            if self.y_vel > 0:
+                self.x_vel = -self.y_vel
             self.x_vel -= (acceleration / 2)
             self.y_vel += (acceleration / 2)
             if any(self.direction_sprites):
                 self.sprite = self.direction_sprites[2]
         elif direction == "down-right":
-            if self.x_vel<0:
-                self.x_vel=0
-            if self.y_vel<0:
-                self.y_vel=0
+            if self.x_vel < 0:
+                self.x_vel = 0
+            if self.y_vel < 0:
+                self.y_vel = 0
+
+            if self.x_vel > 0:
+                self.y_vel = self.x_vel
+            if self.y_vel > 0:
+                self.x_vel = self.y_vel
             self.x_vel += (acceleration / 2)
             self.y_vel += (acceleration / 2)
             if any(self.direction_sprites):
@@ -141,9 +167,9 @@ class Player(Entity):
         if self.y_vel > 0.22:
             self.y_vel = 0.22
         if self.x_vel < -0.22:
-            self.x_vel=-0.22
-        if self.y_vel <-0.22:
-            self.y_vel=-0.22
+            self.x_vel = -0.22
+        if self.y_vel < -0.22:
+            self.y_vel = -0.22
 
         # Move the player
         self.coord = (self.coord[0] + self.x_vel, self.coord[1] + self.y_vel)
@@ -182,9 +208,9 @@ class Player(Entity):
         if closest_entity:
             # If we ended up with a closest entity, then interact with it
             # and return any commands it might have for the frontend
-            if isinstance(closest_entity,WaterBottle):
+            if isinstance(closest_entity, WaterBottle):
                 self.stats.add_thirst(closest_entity.drink())
-            elif isinstance(closest_entity,CannedFood):
+            elif isinstance(closest_entity, CannedFood):
                 self.stats.add_hunger(closest_entity.eat())
             return closest_entity.interact()
         else:

@@ -1,3 +1,7 @@
+# visuals.py
+# Esteban, Richard, Utkarsh, Sam
+# June 21, 2022
+
 import pygame, pygame_gui
 
 class Visuals():

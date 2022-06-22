@@ -1,3 +1,7 @@
+# data_loader.py
+# Esteban, Richard, Utkarsh, Sam
+# June 21, 2022
+
 import csv
 from Classes.dungeon import Dungeon
 from Classes.scene import Scene

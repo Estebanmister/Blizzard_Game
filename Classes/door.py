@@ -1,3 +1,6 @@
+# doors.py
+# Esteban, Richard, Utkarsh, Sam
+# June 15, 2022
 from Classes.collisionentity import CollisionEntity
 
 

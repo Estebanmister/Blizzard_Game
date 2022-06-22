@@ -1,3 +1,6 @@
+# enemy.py
+# Esteban, Richard, Utkarsh, Sam
+# June 19, 2022
 from Classes.collisionentity import CollisionEntity
 from math import sin, cos, radians
 

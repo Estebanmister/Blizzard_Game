@@ -1,5 +1,7 @@
+# sounds.py
+# Esteban, Richard, Utkarsh, Sam
+# June 21, 2022
 import pygame, random
-
 
 class Sounds:
     current_track = None

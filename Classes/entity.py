@@ -1,3 +1,6 @@
+# entity.py
+# Esteban, Richard, Utkarsh, Sam
+# June 7, 2022
 class Entity:
     def __init__(self, coord, sprite, index=0, args=()):
         """
