@@ -29,9 +29,10 @@ class PlayerStats:
 
     def __init__(self, new_game=True, hunger=20.0, thirst=20.0, sanity=50.0, scene_id=None):
         """
-        IMPORTANT: when creating this object, create it by editing the player_stats global variable
+        IMPORTANT: when creating this object, create it by passing the stat into Player
         Creates a PlayerStats object with scene_id, custom hunger, thirst and sanity
         Default values are hunger:20, thirst:20, sanity:50
+
         Let's run the game the hardcore way. The player gets sent directly back to the beginning on death (shouldn't be too hard).
         Remember to save the player stats on game exit. It will automatically load them on game start.
         scene_id does not need to be set now. Just call the update_scene_id() function whenever needed.
