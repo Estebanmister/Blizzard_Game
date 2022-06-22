@@ -12,7 +12,7 @@ class Notes(Entity):
         global notes_index
         if DEBUG:
             notes_file = open("Entities/Notes.txt", "r")
-            sprite.blit(pygame.font.SysFont('Arial', 175).render(str(len(notes_file.readlines()) - 1 - notes_index), True, (255, 0, 0)), (25,25))
+            sprite.blit(pygame.font.SysFont('Arial', 25).render(str(len(notes_file.readlines()) - 1 - notes_index), True, (255, 0, 0)), (0,0))
             notes_file.close()
         Entity.__init__(self, coord, sprite, index, args)
         self.interactable = True
