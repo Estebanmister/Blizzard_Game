@@ -85,9 +85,9 @@ class playerStatsController():
         player_stats.reduce_hunger(0.0002,0.002)
         player_stats.reduce_thirst(0.0003,0.004)
         if 'demo' in currentScene.ID:
-            player_stats.reduce_sanity(0.005,0.01)
-        else:
             player_stats.add_sanity(0.01)
+        else:
+            player_stats.reduce_sanity(0.005,0.01)
 
 managePlayer = playerStatsController()
 
