@@ -23,6 +23,9 @@ class WaterBottle(Entity):
         self.scene.remove_entity(self.ID)
         return randint(3, 6)
 
+    def interact(self):
+        return "EATEN"
+
 
 class CannedFood(Entity):
     # class initializer
@@ -45,3 +48,5 @@ class CannedFood(Entity):
         """
         self.scene.remove_entity(self.ID)
         return randint(3, 6)
+    def interact(self):
+        return "EATEN"

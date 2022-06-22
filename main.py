@@ -9,16 +9,14 @@ from Classes.sounds import *
 #define some variables, what FPS game will run at
 #basic colour tuples to make writing colours easier
 #set desired width and height game will run at later
-showtext = False
 FPS = 120
 black = (0,0,0)
 white = (255, 255, 255)
 width, height = 700, 700
 gamePaused = False
-textOnScreen = ''
 tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
 
-
+text_counter = 0
 
 #calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
@@ -64,31 +62,19 @@ class UI():
             self.drawText("MENU",font,white,width/2,0)
     #DrawText and QuickText are in conjunction, quick is just draw with less parameters to pass
     def drawText(self,textToFill, x,y):
-        global showtext
-        
-        if textOnScreen == "":
-            showtext = not showtext
+        global text_counter
 
         if Visual.drawlabel != None:
             Visual.drawlabel.kill()
 
         Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
-
-        if showtext:
-            Visual.drawlabel.show()
-        else:
-            Visual.drawlabel.hide()
+        Visual.drawlabel.show()
     
 
-    def quickText(self,textToFill):
-        global textOnScreen
+    def quickText(self,textToFill, delay=400):
+        global text_counter
+        text_counter = delay
         self.drawText(textToFill,0,(height/4)* 3)
-        textToFill = textOnScreen
-    def clearText(self):
-        global textOnScreen
-        textOnScreen = ''
-    def displayUI(self):
-        self.drawText(textToFill,0,(height/4)*3)
 
 gameUI = UI()
 
@@ -112,7 +98,6 @@ def player_input(keys_pressed):
     global scX, scY
     global scale
     global gamePaused
-    global textOnScreen
     global tempsurf
     global last_interaction_counter
 
@@ -157,15 +142,12 @@ def player_input(keys_pressed):
     if keys_pressed[pygame.K_e] and last_interaction_counter == 0:
         last_interaction_counter = 20
         command_to_do = player_obj.interact_with()
+        print(command_to_do)
         if command_to_do == None:
-            if textOnScreen == '':
-                gameUI.quickText("There's nothing to interact with here")
-            else:
-                gameUI.clearText()
+            gameUI.quickText("There's nothing to interact with here", delay=100)
         if command_to_do is not None:
             if command_to_do.split(' ')[0] == 'DISPLAY':
-                gameUI.clearText()
-                textOnScreen = ' '.join(command_to_do.split(' ')[1:])
+                gameUI.quickText(' '.join(command_to_do.split(' ')[1:]))
             if command_to_do.split(' ')[0] == 'EXIT':
                 newdungeon = command_to_do.split(' ')[1]
                 print("MOVING TO " + newdungeon)
@@ -235,9 +217,9 @@ def Main():
     global scY, scX
     global scale
     global gamePaused
-    global textOnScreen
     global start_time
     global clock
+    global text_counter
 
     clock = pygame.time.Clock()
     scX = width/currentScene.width
@@ -311,10 +293,10 @@ def Main():
             else:
                 draw_display(currentScene)
                 currentScene.update_all()
-            if textOnScreen == '':
-                pass
+            if text_counter == 0 and Visual.drawlabel:
+                Visual.drawlabel.hide()
             else:
-                gameUI.quickText(textOnScreen)
+                text_counter -= 1
             pygame.display.update()
 
 
