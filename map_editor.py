@@ -1,6 +1,6 @@
 import pygame, os, csv
 # By Esteban
-# To be commented.
+# NOT TO BE BUNDLED WITH THE GAME!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 x = 10
 y = 10
