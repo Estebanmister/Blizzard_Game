@@ -49,8 +49,7 @@ class Player(Entity):
         # Pressing no key down will set both x and y movement to 0.
         # Moving in the opposite direction will first stop the player movement instantly, then move in that direction.
         # Player's velocity will be reset in that axis only if it changes direction in one axis.
-        # For example. If the player changes from down-right to down-left, the x-velocity will be reset,
-        # y-velocity remains unchanged.
+        # When moving diagonally, the x_vel and x_vel is synchronized.
         previous = self.coord
 
         # Default acceleration
