@@ -277,6 +277,10 @@ def Main():
                         pass
 
                 Visual.ui_manager.process_events(event)
+
+            draw_display(currentScene)
+            pygame.display.update()
+        elif Visual.screen == "game":
             if not player_obj.stats.check_alive():
                 #respawn
                 print("YOOOOOO")
@@ -303,11 +307,6 @@ def Main():
                         if currentScene.length == currentScene.width:
                             tempsurf.blit(sprite,
                                           (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-            draw_display(currentScene)
-            pygame.display.update()
-
-
-        elif Visual.screen == "game":
             clock.tick(FPS)
             keys_pressed = pygame.key.get_pressed()  #put this here since player_input wont work if the var isn't defined.
             for event in pygame.event.get():

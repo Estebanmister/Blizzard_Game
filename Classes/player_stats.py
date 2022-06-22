@@ -67,14 +67,14 @@ class PlayerStats:
                 self.__sanity = sanity
 
             # We will need to save the player's initial stats in a file for later uses
-            self.save_to_file("../Player/initial_stats.csv")
+            self.save_to_file("Player/initial_stats.csv")
 
         # Else, load from file
         else:
-            self.read_file("../Player/stats.csv")
+            self.read_file("Player/stats.csv")
 
         # Either case, we need to load the initial stats as a dict
-        with open("../Player/initial_stats.csv", 'r') as stats_dict:
+        with open("Player/initial_stats.csv", 'r') as stats_dict:
             reader = csv.DictReader(stats_dict)
             self.stats_dict = next(reader)
 
@@ -163,7 +163,7 @@ class PlayerStats:
             self.__health = True
 
             # Load initial stat back in
-            self.read_file("../Player/initial_stats.csv")
+            self.read_file("Player/initial_stats.csv")
 
             return False
 
