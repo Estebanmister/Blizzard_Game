@@ -9,7 +9,6 @@ class Notes(Entity):
     current_line = 0
 
     def __init__(self, coord, sprite, index=0, args=()):
-        # Creates a Note object, that displays a message to the frontend.
         global notes_index
         if DEBUG:
             notes_file = open("Entities/Notes.txt", "r")
