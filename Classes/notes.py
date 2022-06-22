@@ -1,3 +1,6 @@
+# notes.py
+# Esteban, Richard, Utkarsh, Sam
+# June 19, 2022
 from Classes.entity import Entity
 
 class Notes(Entity):

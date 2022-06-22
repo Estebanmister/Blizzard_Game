@@ -1,3 +1,6 @@
+# scene.py
+# Esteban, Richard, Utkarsh, Sam
+# June 7, 2022
 from Classes.collisionentity import CollisionEntity
 
 

@@ -1,4 +1,8 @@
+# dungeon.py
+# Esteban, Richard, Utkarsh, Sam
+# June 9, 2022
 last_id = []
+
 def compare(scene, ID):
     """
     Find a specific scene on the fourth level graph, by recursively scanning all branching paths

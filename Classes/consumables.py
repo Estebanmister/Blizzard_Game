@@ -1,3 +1,6 @@
+# consumables.py
+# Esteban, Richard, Utkarsh, Sam
+# June 14, 2022
 from Classes.entity import Entity
 from random import randint
 
