@@ -72,7 +72,7 @@ class UI():
         Visual.drawlabel.show()
     
 
-    def quickText(self,textToFill, delay=400):
+    def quickText(self,textToFill, delay=300):
         global text_counter
         text_counter = delay
         self.drawText(textToFill,0,(height/4)* 3)
