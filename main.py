@@ -277,7 +277,7 @@ def Main():
                         pass
 
                 Visual.ui_manager.process_events(event)
-            if not player_obj.stat.check_alive():
+            if not player_obj.stats.check_alive():
                 #respawn
                 print("YOOOOOO")
                 print("MOVING TO " + dungeonDirectory)
