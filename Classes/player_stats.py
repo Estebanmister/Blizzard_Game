@@ -71,14 +71,14 @@ class PlayerStats:
                 self.__sanity = sanity
 
             # We will need to save the player's initial stats in a file for later uses
-            self.save_to_file("Player/initial_stats.csv")
+            self.save_to_file("../Player/initial_stats.csv")
 
         # Else, load from file
         else:
-            self.read_file("Player/stats.csv")
+            self.read_file("../Player/stats.csv")
 
         # Either case, we need to load the initial stats as a dict
-        with open("Player/initial_stats.csv", 'r') as stats_dict:
+        with open("../Player/initial_stats.csv", 'r') as stats_dict:
             reader = csv.DictReader(stats_dict)
             self.stats_dict = next(reader)
 
@@ -315,21 +315,6 @@ class PlayerStats:
             self.__first_scene_id = self.__scene_id
 
 # Test code
-# test = PlayerStats(True, 10, 10, 10)
-# print(test.get_stats())
-# test.reduce_thirst(5,5)
-# test.reduce_hunger(5,5)
-# test.reduce_sanity(5,5)
-# test.add_thirst(10)
-# test.add_sanity(10)
-# test.add_hunger(10)
-# print(test.get_stats())
-# test.save_to_file()
-# test.add_hunger(1)
-# test.add_sanity(1)
-# test.add_thirst(1)
-# print(test.get_stats())
-# test.reduce_hunger(100,100)
-# print(test.get_stats())
-# print(test.check_alive())
-# print(test.get_stats())
+test = PlayerStats(True, 10, 10, 10)
+test.set_alive(False)
+print(test.check_alive())
