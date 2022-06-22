@@ -12,7 +12,6 @@ class PlayerStats:
         """
         If min_value is higher than max_value, the two will be switched,
         Negative input will default both to 0.1.
-
         :param min_value: (float) The minimum value
         :param max_value: (float) The maximum value
         :return: The checked min and max value
@@ -33,12 +32,9 @@ class PlayerStats:
         IMPORTANT: when creating this object, create it by editing the player_stats global variable
         Creates a PlayerStats object with scene_id, custom hunger, thirst and sanity
         Default values are hunger:20, thirst:20, sanity:50
-
-
         Let's run the game the hardcore way. The player gets sent directly back to the beginning on death (shouldn't be too hard).
         Remember to save the player stats on game exit. It will automatically load them on game start.
         scene_id does not need to be set now. Just call the update_scene_id() function whenever needed.
-
         :param new_game: (bool) True if starting a new game, False if continuing the previous game (load from file)
         :param scene_id: (string) the scene player is in on creation of the PlayerStats object. Does not need to be set right away
         :param hunger: (float) The player's hunger stat
@@ -48,7 +44,7 @@ class PlayerStats:
 
         # If starting a new game, initialize variables
         if new_game:
-            self.health = True
+            self.__health = True
             self.__scene_id = scene_id
 
             # Default the first_scene_id to scene_id on load
@@ -85,13 +81,12 @@ class PlayerStats:
     def save_to_file(self, filename="Player/stats.csv"):
         """
         Saves player stats to file
-
         :param filename: The file to save the stats to
         """
 
         # Set the header, save the values accordingly
         fields = ["health", "scene_id", "first_scene_id", "hunger", "thirst", "sanity"]
-        stats = {"health": self.health,
+        stats = {"health": self.__health,
                  "scene_id": self.__scene_id,
                  "first_scene_id": self.__first_scene_id,
                  "hunger": round(self.__hunger, 3),
@@ -105,7 +100,6 @@ class PlayerStats:
     def read_file(self, filename):
         """
         Read player stats from csv file, set each variable in PlayerStats class accordingly
-
         :param filename: The file to load the stats from
         """
 
@@ -113,7 +107,7 @@ class PlayerStats:
         with open(filename, newline='') as csvfile:
             reader = csv.DictReader(csvfile)
             for line in reader:
-                self.health = line["health"]
+                self.__health = line["health"]
                 self.__scene_id = line["scene_id"]
                 self.__first_scene_id = line["first_scene_id"]
                 self.__hunger = float(line["hunger"])
@@ -123,11 +117,10 @@ class PlayerStats:
     def get_stats(self):
         """
         Get the player's stats, as a dictionary
-
         :return: A dictionary, with each player stat (health, scene_id, first_scene_id, hunger, thirst, sanity)
          listed in the form of stat_name:value, numerical values rounded to one decimal place
         """
-        return {"health": self.health,
+        return {"health": self.__health,
                 "scene_id": self.__scene_id,
                 "first_scene_id": self.__first_scene_id,
                 "hunger": round(self.__hunger, 1),
@@ -137,7 +130,6 @@ class PlayerStats:
     def check_stats_for_zero(self):
         """
         Checks if any of the player's stat (health, hunger, thirst or sanity) falls to or below zero
-
         :return: True if the any of the stat falls below or equal to zero, False otherwise
         """
         if self.__sanity <= 0 or self.__thirst <= 0 or self.__hunger <= 0:
@@ -150,27 +142,25 @@ class PlayerStats:
         The function will call the check_stats_for_zero function,
         which will set the player's health to False if any stat is zero
         (indicating the player is dead)
-
         If the player is dead (health = False), the player will be returned to the first scene
         by setting scene_id to first_scene_id. Since the game currently does not support recursive searching for a specific scene,
         the function will respawn the player and return False on call, if the player is dead.
-
         :return: The function will return False if player dies and respawn (although their health is set back to True).
         Otherwise it will return True (if the player is alive).
         """
 
         # Set the player's health to False if any stat is zero
         if self.check_stats_for_zero():
-            self.health = False
+            self.__health = False
 
         # If player's health is False, return to first scene, change health to True
-        if not self.health:
+        if not self.__health:
             if self.__first_scene_id is not None:
                 # Only send the player back to the first scene if the first scene is set
                 self.__scene_id = self.__first_scene_id
 
             # Set health back to True
-            self.health = True
+            self.__health = True
 
             # Load initial stat back in
             self.read_file("../Player/initial_stats.csv")
@@ -178,16 +168,15 @@ class PlayerStats:
             return False
 
         # Returns the player's health status (Always True)
-        return self.health
+        return self.__health
 
     def set_alive(self, alive):
         """
         Set the player's health status
-
         :param alive: (bool) True if player is alive, False if not.
         """
 
-        self.health = alive
+        self.__health = alive
 
     def reduce_hunger(self, min_value, max_value):
         """
@@ -195,7 +184,6 @@ class PlayerStats:
         Set both equal to each other to reduce the hunger by a set value.
         If min_value is higher than max_value, the two will be switched,
         Negative input will default both to 0.1.
-
         :param min_value: (float) the minimum value to reduce hunger by
         :param max_value: (float) the maximum value to reduce hunger by
         """
@@ -212,7 +200,6 @@ class PlayerStats:
         Set both equal to each other to reduce the thirst by a set value.
         If min_value is higher than max_value, the two will be switched,
         Negative input will default both to 0.1.
-
         :param min_value: (float) the minimum value to reduce thirst by
         :param max_value: (float) the maximum value to reduce thirst by
         """
@@ -229,7 +216,6 @@ class PlayerStats:
         Set both equal to each other to reduce the sanity by a set value.
         If min_value is higher than max_value, the two will be switched,
         Negative input will default both to 0.1.
-
         :param min_value: (float) the minimum value to reduce sanity by
         :param max_value: (float) the maximum value to reduce sanity by
         """
@@ -244,7 +230,6 @@ class PlayerStats:
         """
         Adds an amount to the hunger
         value will not exceed default
-
         :param value: The amount being add to the hunger stat
         """
         max_hunger = float(self.stats_dict["hunger"])
@@ -259,7 +244,6 @@ class PlayerStats:
         """
         Adds an amount to the thirst
         value will not exceed default
-
         :param value: The amount being add to the thirst stat
         """
         max_thirst = float(self.stats_dict["thirst"])
@@ -274,7 +258,6 @@ class PlayerStats:
         """
         Adds an amount to the sanity
         value will not exceed default
-
         :param value: The amount being add to the sanity stat
         """
 
@@ -302,7 +285,6 @@ class PlayerStats:
         """
         Updates the scene_id with the new scene the player moves to
         If first_scene_id is None (haven't been set yet), it will be set to the current scene_id
-
         :param ID: The scene the player moves to.
         """
 

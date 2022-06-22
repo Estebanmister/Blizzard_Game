@@ -277,7 +277,7 @@ def Main():
                         pass
 
                 Visual.ui_manager.process_events(event)
-            if not player_obj.stats.health:
+            if not player_obj.stat.check_alive():
                 #respawn
                 print("YOOOOOO")
                 print("MOVING TO " + dungeonDirectory)
@@ -337,7 +337,7 @@ def rotate_center(image, angle):
     return rot_image
 
 def draw_display(scene):
-    global tempsurf
+    global tempsurf, player_obj
 
     screen.fill(black)
     Visual.ui_manager.update(clock.tick(FPS)/1000) #updates information on the ui elements
@@ -361,11 +361,10 @@ def draw_display(scene):
         for entity in scene.get_all_entities():
             angle = 0
             coordinateDraw = entity.coord
-            if 'Enemy' in entity.ID:
+            if 'enemy' in entity.ID.lower():
                 angle = entity.angle_of_sight
                 compx = sin(radians(entity.angle_of_sight))
                 compy = cos(radians(entity.angle_of_sight))
-
                 for s in range(entity.stopped_at+1):
                     x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length))/2)
                     y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width))/2)
