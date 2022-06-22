@@ -1,6 +1,3 @@
-# finaldoor.py
-# Esteban, Richard, Utkarsh, Sam
-# June 21, 2022
 from Classes.collisionentity import CollisionEntity
 
 

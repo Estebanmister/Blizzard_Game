@@ -1,6 +1,3 @@
-# notes.py
-# Esteban, Richard, Utkarsh, Sam
-# June 19, 2022
 from Classes.entity import Entity
 import pygame
 notes_index = 0

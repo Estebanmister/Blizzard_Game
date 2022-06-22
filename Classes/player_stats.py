@@ -1,6 +1,3 @@
-# player_stats.py
-# Esteban, Richard, Utkarsh, Sam
-# June 13, 2022
 from random import uniform
 import csv
 
