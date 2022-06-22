@@ -11,12 +11,15 @@ def compare(scene, ID):
     :param ID: (String) ID of scene to find
     :return: (Scene) or False
     """
+    # Last id is a list of every ID we already looked at
     global last_id
     if scene is None:
         # If there is no actual scene, then no searching needs to be done
         return False
 
     if scene.ID in last_id:
+        # If we have already searched this ID, then stop this branch of searching, or we will end in an
+        # infinite loop
         return False
     last_id.append(scene.ID)
     if scene.ID == ID:
