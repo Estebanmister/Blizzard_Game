@@ -27,10 +27,10 @@ class Enemy(CollisionEntity):
 
     def update(self):
         """
-        Check the line of sight, the line of sight is
+        Check the line of sight, the line of sight is defined in self.range_of_sight,
+         self.angle_of_sight, self.start_angle and self.speed_of_turn
         :return:
         """
-        global player_stats
         all_entities = self.scene.get_all_entities()
         # Comonents of the direction vector
         compx = sin(radians(self.angle_of_sight))
