@@ -4,9 +4,9 @@
 from Classes.entity import Entity
 
 class Notes(Entity):
-    # A class level variable to keep track
 
     def __init__(self, coord, sprite, index=0, args=()):
+        # The notes class displays notes to the front end
         Entity.__init__(self, coord, sprite, index, args)
         self.interactable = True
         self.current_line = args[0]
