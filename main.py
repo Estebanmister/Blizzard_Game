@@ -36,8 +36,7 @@ pygame.font.init()
 
 font = pygame.font.SysFont('arial',40)
 Visual = Visuals(width, height, player_stats.get_stats())
-tutorialMenu = pygame.image.load(("Assets/Sprites/BLIZZARD_3.png"))
-tutorialMenu = pygame.transform.scale(tutorialMenu,(700,700))
+tutorialMenu = pygame.image.load(("Assets/Sprites/BLIZZARD_TUTORIAL.png"))
 tutorialPassed = False
 Sound = Sounds()
 Sound.play_music("menu.wav")
@@ -175,6 +174,7 @@ def player_input(keys_pressed):
     else:
         player_obj.move("none")
     if keys_pressed[pygame.K_f]:
+        print("F is pressed")
         tutorialPassed = True
     if keys_pressed[pygame.K_ESCAPE]:
         #If the escape key is pressed, toggle opening the Menu and Pausing the game
@@ -346,6 +346,9 @@ def Main():
         Checking for input keys each frame, only running the game at the set FPS (120 in our case)
         '''
         if Visual.screen == "title":
+            if not tutorialPassed:
+                keys_pressed = pygame.key.get_pressed()
+                player_input(keys_pressed)
             #only run the game 120 frames a second to prevent physics from going haywire or game running too fast
             clock.tick(FPS)/1000 
             for event in pygame.event.get():
