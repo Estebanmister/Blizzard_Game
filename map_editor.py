@@ -10,9 +10,9 @@ all_scenes = []
 current_back = None
 all_sprites = os.listdir("Assets/Sprites")
 screen = pygame.display.set_mode((x,y))
-tempsurf = pygame.Surface((x*50,y*50), flags=pygame.SRCALPHA)
+temp_surface = pygame.Surface((x * 50, y * 50), flags=pygame.SRCALPHA)
 def createScene():
-    global currentID, x, y, current_back, tempsurf, screen
+    global currentID, x, y, current_back, temp_surface, screen
     currentID = input("Scene ID")
     x = int(input('x:'))
     y = int(input('y:'))
@@ -37,7 +37,7 @@ clock = pygame.time.Clock()
 while run:
     #screen.fill((0,0,0))
     screen.blit(pygame.transform.scale(current_back, (x*50, y*50)), (0,0))
-    screen.blit(tempsurf, (0,0))
+    screen.blit(temp_surface, (0, 0))
     pos = pygame.mouse.get_pos()
     screen.blit(pygame.transform.scale(pygame.image.load(entity['sprite']), (50,50)), pos)
     pygame.display.update()
@@ -53,8 +53,8 @@ while run:
         if toggle and event.type == pygame.MOUSEBUTTONUP:
             entity['x'] = pos[0]//50
             entity['y'] = pos[1]//50
-            tempsurf.blit(pygame.transform.scale(pygame.image.load(entity['sprite']), (50, 50)),
-                          (entity['x'] * 50, entity['y'] * 50))
+            temp_surface.blit(pygame.transform.scale(pygame.image.load(entity['sprite']), (50, 50)),
+                              (entity['x'] * 50, entity['y'] * 50))
             ent = ""
             for vl in entity.values():
                 ent += str(vl) + "*"

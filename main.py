@@ -14,7 +14,7 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 width, height = 700, 700
 gamePaused = False
-tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+temp_surface = pygame.Surface((width, height), flags=pygame.SRCALPHA)
 text_counter = 0
 
 # calculate the sprite scale using screen -- calculation is done in Main()
@@ -56,13 +56,13 @@ def drawText(textToFill, x, y):
     """
     global text_counter
 
-    if Visual.drawlabel is not None:
-        Visual.drawlabel.kill()
+    if Visual.draw_label is not None:
+        Visual.draw_label.kill()
 
-    Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (
+    Visual.draw_label = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (
         Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager,
-                                                     container=Visual.game_container)
-    Visual.drawlabel.show()
+                                                      container=Visual.game_container)
+    Visual.draw_label.show()
 
 
 class UI:
@@ -80,7 +80,7 @@ class UI:
         toggles if the menu is visible or not
         """
         global gamePaused
-        if gamePaused == True:
+        if gamePaused:
             gamePaused = False
         else:
             gamePaused = True
@@ -96,7 +96,8 @@ class UI:
             screen.fill(black)
             drawText("MENU", font, white, width / 2, 0)
 
-    def quickText(self, textToFill, delay=300):
+    @staticmethod
+    def quickText(textToFill, delay=300):
         """
         quickText is the same exact method as drawText, it even invokes drawText
         It was simply created as a convenience method when we want to print something
@@ -145,7 +146,7 @@ managePlayer = PlayerStatsController()
 
 def player_input(keys_input):
     """
-    This function is in charge for all things related to Pygame Key inputs
+    This function is in charge of all things related to Pygame Key inputs
     Param keys_pressed: (module) What keys are currently being pressed (checked each frame)
     We take action accordingly if any keys are being pressed that may be actionable.
     """
@@ -154,7 +155,7 @@ def player_input(keys_input):
     global scX, scY
     global scale
     global gamePaused
-    global tempsurf
+    global temp_surface
     global last_interaction_counter
     global dungeonDirectory
     global tutorialPassed
@@ -245,7 +246,7 @@ def player_input(keys_input):
                 # tempsurf is for optimization, it was observed putting too many sprites on the screen
                 # was a big loss for performance. This way, we put all sprites onto tempsurf, and simply
                 # draw tempsurf on the screen at the end. 
-                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                temp_surface = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
                     # the tempsurf optimization is specifically for walls, we put the walls inside it
                     # and draw tempsurf at the end, aka all walls are drawn in one swift stroke.
@@ -254,16 +255,16 @@ def player_input(keys_input):
                         coordinate_draw = entity.coord
                         sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                         if currentScene.width > currentScene.length:
-                            tempsurf.blit(sprite, (
+                            temp_surface.blit(sprite, (
                                 ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
                                  coordinate_draw[1] * scale)))
                         if currentScene.length > currentScene.width:
-                            tempsurf.blit(sprite, (
+                            temp_surface.blit(sprite, (
                                 (coordinate_draw[0] * scale,
                                  (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                         if currentScene.length == currentScene.width:
-                            tempsurf.blit(sprite,
-                                          (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+                            temp_surface.blit(sprite,
+                                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
             if command_to_do.split(' ')[0] == 'MOVE':
                 # if the interaction command is MOVE xyz, we move the player to a different room
                 # this demonstrates complex coding because this deals with linked lists.
@@ -283,7 +284,7 @@ def player_input(keys_input):
                     scX = width / currentScene.width
                     scY = height / currentScene.length
                     scale = min(scX, scY)
-                    tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                    temp_surface = pygame.Surface((width, height), flags=pygame.SRCALPHA)
 
                     # Cache all the walls inside a surface
                     for entity in currentScene.get_all_entities():
@@ -291,16 +292,16 @@ def player_input(keys_input):
                             coordinate_draw = entity.coord
                             sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                             if currentScene.width > currentScene.length:
-                                tempsurf.blit(sprite, (
+                                temp_surface.blit(sprite, (
                                     ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
                                      coordinate_draw[1] * scale)))
                             if currentScene.length > currentScene.width:
-                                tempsurf.blit(sprite, (
+                                temp_surface.blit(sprite, (
                                     (coordinate_draw[0] * scale,
                                      (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                             if currentScene.length == currentScene.width:
-                                tempsurf.blit(sprite,
-                                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+                                temp_surface.blit(sprite,
+                                                  (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
 
         pygame.time.delay(100)
     elif keys_input[pygame.K_e]:
@@ -324,7 +325,7 @@ def Main():
     global gamePaused
     global clock
     global text_counter
-    global tempsurf
+    global temp_surface
     global tutorialMenu
     global tutorialPassed
 
@@ -342,16 +343,16 @@ def Main():
             coordinate_draw = entity.coord
             sprite = pygame.transform.scale(entity.sprite, (scale, scale))
             if currentScene.width > currentScene.length:
-                tempsurf.blit(sprite, (
+                temp_surface.blit(sprite, (
                     ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
                      coordinate_draw[1] * scale)))
             if currentScene.length > currentScene.width:
-                tempsurf.blit(sprite, (
+                temp_surface.blit(sprite, (
                     (coordinate_draw[0] * scale,
                      (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
             if currentScene.length == currentScene.width:
-                tempsurf.blit(sprite,
-                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+                temp_surface.blit(sprite,
+                                  (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
 
     while run:
         '''
@@ -392,7 +393,7 @@ def Main():
 
                 Visual.ui_manager.process_events(event)
 
-            draw_display(currentScene, tempsurf)
+            draw_display(currentScene, temp_surface)
             pygame.display.update()
         elif Visual.screen == "game":
             if not player_obj.stats.check_alive():
@@ -412,22 +413,22 @@ def Main():
                 scX = width / currentScene.width
                 scY = height / currentScene.length
                 scale = min(scX, scY)
-                tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
+                temp_surface = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
                     if "CollisionEntity" in entity.ID:
                         coordinate_draw = entity.coord
                         sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                         if currentScene.width > currentScene.length:
-                            tempsurf.blit(sprite, (
+                            temp_surface.blit(sprite, (
                                 ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
                                  coordinate_draw[1] * scale)))
                         if currentScene.length > currentScene.width:
-                            tempsurf.blit(sprite, (
+                            temp_surface.blit(sprite, (
                                 (coordinate_draw[0] * scale,
                                  (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                         if currentScene.length == currentScene.width:
-                            tempsurf.blit(sprite,
-                                          (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+                            temp_surface.blit(sprite,
+                                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
                 # -----scene change code ends above
             clock.tick(FPS)
             # keys_pressed is a pygame module, this invokes the complex pygame's get_pressed to get a list of all keys pressed in a certain frame.
@@ -447,10 +448,10 @@ def Main():
                 gameUI.showMenu()
             else:
                 # if game is not paused, draw the scene, and update all entities as usual
-                draw_display(currentScene, tempsurf)
+                draw_display(currentScene, temp_surface)
                 currentScene.update_all()
-            if text_counter == 0 and Visual.drawlabel:
-                Visual.drawlabel.hide()
+            if text_counter == 0 and Visual.draw_label:
+                Visual.draw_label.hide()
             else:
                 text_counter -= 1
 
