@@ -37,7 +37,7 @@ pygame.font.init()
 
 font = pygame.font.SysFont('arial', 40)
 Visual = Visuals(width, height, player_stats.get_stats())
-tutorialMenu = pygame.image.load(("Assets/Sprites/BLIZZARD_TUTORIAL.png"))
+tutorialMenu = pygame.image.load("Assets/Sprites/BLIZZARD_TUTORIAL.png")
 tutorialPassed = False
 Sound = Sounds()
 Sound.play_music("menu.wav")
@@ -48,20 +48,37 @@ last_interaction_counter = 0
 ##########################################################################
 # Getting into the actual code now, after the prerequisite set ups.
 
-class UI():
-    '''
-    This class will handle all methods relating to the UI the player will see. 
+def drawText(textToFill, x, y):
+    """
+    method to write text on the screen,
+    param textToFill: (string) What do we want to type
+    param x,y: (integers) What location on Pygame X,Y grid do we want this text
+    """
+    global text_counter
+
+    if Visual.drawlabel is not None:
+        Visual.drawlabel.kill()
+
+    Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (
+        Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager,
+                                                     container=Visual.game_container)
+    Visual.drawlabel.show()
+
+
+class UI:
+    """
+    This class will handle all methods relating to the UI the player will see.
     On screen elements, showing and hiding them, will all be trigged from the methods here.
     The idea is, the UI is seen as a card almost, which can be brought in or out of view as needed.
-    '''
+    """
 
     def __init__(self):
         pass
 
     def toggleMenu(self):
-        '''
+        """
         toggles if the menu is visible or not
-        '''
+        """
         global gamePaused
         if gamePaused == True:
             gamePaused = False
@@ -71,61 +88,46 @@ class UI():
             self.showMenu()
 
     def showMenu(self):
-        '''
+        """
         if menu is visible, draw the menu on the display
-        '''
-        if gamePaused == True:
+        """
+        if gamePaused:
             self.clearText()
             screen.fill(black)
-            self.drawText("MENU", font, white, width / 2, 0)
-
-    def drawText(self, textToFill, x, y):
-        '''
-        method to write text on the screen, 
-        param textToFill: (string) What do we want to type
-        param x,y: (integers) What location on Pygame X,Y grid do we want this text
-        '''
-        global text_counter
-
-        if Visual.drawlabel != None:
-            Visual.drawlabel.kill()
-
-        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (
-            Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager,
-                                                         container=Visual.game_container)
-        Visual.drawlabel.show()
+            drawText("MENU", font, white, width / 2, 0)
 
     def quickText(self, textToFill, delay=300):
-        '''
+        """
         quickText is the same exact method as drawText, it even invokes drawText
         It was simply created as a convenience method when we want to print something
         in exact same spot using preset font, colour, etc. settings.
         param delay: (integer) What is the delay to be used in conjuction with the text
-        '''
+        """
         global text_counter
         text_counter = delay
-        self.drawText(textToFill, 0, (height / 4) * 3)
+        drawText(textToFill, 0, (height / 4) * 3)
 
 
 # With the UI() class complete, we can spawn its object, gameUI.
 gameUI = UI()
 
 
-class playerStatsController():
-    '''
+class PlayerStatsController:
+    """
     This class is responsible for acting like a manager to our player's stats.
     If we want to change our player's stats or access them, we can do so
     with the methods here
-    '''
+    """
 
     def __init__(self):
         pass
 
-    def reduceStats(self):
-        '''
+    @staticmethod
+    def reduceStats():
+        """
         We simply call this method to reduce player's stats when player makes a move
         to simulate the feeling of a survival game.
-        '''
+        """
         player_stats.reduce_hunger(0.0002, 0.002)
         player_stats.reduce_thirst(0.0003, 0.004)
 
@@ -138,15 +140,15 @@ class playerStatsController():
 
 
 # Create object of parent class
-managePlayer = playerStatsController()
+managePlayer = PlayerStatsController()
 
 
-def player_input(keys_pressed):
-    '''
+def player_input(keys_input):
+    """
     This function is in charge for all things related to Pygame Key inputs
     Param keys_pressed: (module) What keys are currently being pressed (checked each frame)
     We take action accordingly if any keys are being pressed that may be actionable.
-    '''
+    """
     global currentScene
     global player_obj
     global scX, scY
@@ -157,49 +159,49 @@ def player_input(keys_pressed):
     global dungeonDirectory
     global tutorialPassed
 
-    if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
+    if keys_input[pygame.K_w] or keys_input[pygame.K_a] or keys_input[pygame.K_s] or keys_input[pygame.K_d]:
         # if the game is not paused and the user presses W,A,S,D or any of the 4 in combination, call player movement.
         if not gamePaused:
-            if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
+            if keys_input[pygame.K_w] and keys_input[pygame.K_a]:
                 player_obj.move("up-left")
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_w] and keys_pressed[pygame.K_d]:
+            elif keys_input[pygame.K_w] and keys_input[pygame.K_d]:
                 player_obj.move("up-right")
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_a]:
+            elif keys_input[pygame.K_s] and keys_input[pygame.K_a]:
                 player_obj.move("down-left")
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_s] and keys_pressed[pygame.K_d]:
+            elif keys_input[pygame.K_s] and keys_input[pygame.K_d]:
                 player_obj.move("down-right")
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_w]:
+            elif keys_input[pygame.K_w]:
                 player_obj.move('down')
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_a]:
+            elif keys_input[pygame.K_a]:
                 player_obj.move('left')
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_s]:
+            elif keys_input[pygame.K_s]:
                 player_obj.move('up')
                 managePlayer.reduceStats()
-            elif keys_pressed[pygame.K_d]:
+            elif keys_input[pygame.K_d]:
                 player_obj.move('right')
                 managePlayer.reduceStats()
     else:
         player_obj.move("none")
-    if keys_pressed[pygame.K_f]:
+    if keys_input[pygame.K_f]:
         print("F is pressed")
         tutorialPassed = True
-    if keys_pressed[pygame.K_ESCAPE]:
+    if keys_input[pygame.K_ESCAPE]:
         # If the escape key is pressed, toggle opening the Menu and Pausing the game
         # with use of the gameUI object.
-        if gamePaused == False:
+        if not gamePaused:
             gamePaused = True
             pygame.time.delay(650)
         else:
             gamePaused = False
             pygame.time.delay(650)
 
-    if keys_pressed[pygame.K_e] and last_interaction_counter == 0:
+    if keys_input[pygame.K_e] and last_interaction_counter == 0:
         '''This is the most complex interaction,
         When 'E' is pressed, capture the return command from the nearest
         interactable entity, examples: MOVE up, SAY xyz, MOVE down...
@@ -301,7 +303,7 @@ def player_input(keys_pressed):
                                               (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
 
         pygame.time.delay(100)
-    elif keys_pressed[pygame.K_e]:
+    elif keys_input[pygame.K_e]:
         last_interaction_counter -= 1
 
 
