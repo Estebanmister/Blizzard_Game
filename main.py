@@ -1,4 +1,4 @@
-#import all prerequisite libraries
+# import all prerequisite libraries
 import pygame
 from data_loader import *
 from Classes.player_stats import *
@@ -6,35 +6,36 @@ from math import sin, cos, radians
 import math
 from Classes.visuals import *
 from Classes.sounds import *
-#define some variables for use later such as, what FPS game will run at
-#basic colour tuples, set desired width and height game will run at
+
+# define some variables for use later such as, what FPS game will run at
+# basic colour tuples, set desired width and height game will run at
 FPS = 120
-black = (0,0,0)
+black = (0, 0, 0)
 white = (255, 255, 255)
 width, height = 700, 700
 gamePaused = False
-tempsurf = pygame.Surface((width,height), flags=pygame.SRCALPHA)
+tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
 text_counter = 0
 
-#calculate the sprite scale using screen -- calculation is done in Main()
+# calculate the sprite scale using screen -- calculation is done in Main()
 scY = 0
 scX = 0
 scale = 0
-#imports from other files, scene, player object
+# imports from other files, scene, player object
 currentDungeon = load_dungeon('World/Overworld')
 currentScene = currentDungeon.head
 dungeonDirectory = 'World/Overworld'
 player_obj = currentScene.get_entity('Player0')
 player_stats = PlayerStats()
 player_obj.stats = player_stats
-#set our screen size
+# set our screen size
 pygame.init()
-screen = pygame.display.set_mode((width,height))
-#load assets
+screen = pygame.display.set_mode((width, height))
+# load assets
 pygame.display.set_icon(pygame.image.load("Assets/Sprites/playerdown.png"))
 pygame.font.init()
 
-font = pygame.font.SysFont('arial',40)
+font = pygame.font.SysFont('arial', 40)
 Visual = Visuals(width, height, player_stats.get_stats())
 tutorialMenu = pygame.image.load(("Assets/Sprites/BLIZZARD_TUTORIAL.png"))
 tutorialPassed = False
@@ -42,8 +43,10 @@ Sound = Sounds()
 Sound.play_music("menu.wav")
 
 last_interaction_counter = 0
+
+
 ##########################################################################
-#Getting into the actual code now, after the prerequisite set ups.
+# Getting into the actual code now, after the prerequisite set ups.
 
 class UI():
     '''
@@ -51,8 +54,10 @@ class UI():
     On screen elements, showing and hiding them, will all be trigged from the methods here.
     The idea is, the UI is seen as a card almost, which can be brought in or out of view as needed.
     '''
+
     def __init__(self):
         pass
+
     def toggleMenu(self):
         '''
         toggles if the menu is visible or not
@@ -64,7 +69,7 @@ class UI():
             gamePaused = True
             self.clearText()
             self.showMenu()
-            
+
     def showMenu(self):
         '''
         if menu is visible, draw the menu on the display
@@ -72,24 +77,25 @@ class UI():
         if gamePaused == True:
             self.clearText()
             screen.fill(black)
-            self.drawText("MENU",font,white,width/2,0)
-    
-    def drawText(self,textToFill, x,y):
+            self.drawText("MENU", font, white, width / 2, 0)
+
+    def drawText(self, textToFill, x, y):
         '''
         method to write text on the screen, 
         param textToFill: (string) What do we want to type
         param x,y: (integers) What location on Pygame X,Y grid do we want this text
-        '''  
+        '''
         global text_counter
 
         if Visual.drawlabel != None:
             Visual.drawlabel.kill()
 
-        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager, container=Visual.game_container)
+        Visual.drawlabel = pygame_gui.elements.UITextBox(html_text=textToFill, relative_rect=pygame.Rect((x, y), (
+            Visual.label_data["width"], Visual.label_data["height"])), manager=Visual.ui_manager,
+                                                         container=Visual.game_container)
         Visual.drawlabel.show()
-    
 
-    def quickText(self,textToFill, delay=300):
+    def quickText(self, textToFill, delay=300):
         '''
         quickText is the same exact method as drawText, it even invokes drawText
         It was simply created as a convenience method when we want to print something
@@ -98,9 +104,12 @@ class UI():
         '''
         global text_counter
         text_counter = delay
-        self.drawText(textToFill,0,(height/4)* 3)
-#With the UI() class complete, we can spawn its object, gameUI.
+        self.drawText(textToFill, 0, (height / 4) * 3)
+
+
+# With the UI() class complete, we can spawn its object, gameUI.
 gameUI = UI()
+
 
 class playerStatsController():
     '''
@@ -108,25 +117,29 @@ class playerStatsController():
     If we want to change our player's stats or access them, we can do so
     with the methods here
     '''
+
     def __init__(self):
         pass
+
     def reduceStats(self):
         '''
         We simply call this method to reduce player's stats when player makes a move
         to simulate the feeling of a survival game.
         '''
-        player_stats.reduce_hunger(0.0002,0.002)
-        player_stats.reduce_thirst(0.0003,0.004)
-        
+        player_stats.reduce_hunger(0.0002, 0.002)
+        player_stats.reduce_thirst(0.0003, 0.004)
+
         if 'demo' in currentScene.ID:
-            #however, if the player is moving along a pleasant scene, player regains sanity.
-            #the logic is, staying in a creepy/dark scene for too long will make the player lose their sanity.
+            # however, if the player is moving along a pleasant scene, player regains sanity.
+            # the logic is, staying in a creepy/dark scene for too long will make the player lose their sanity.
             player_stats.add_sanity(0.01)
         else:
-            player_stats.reduce_sanity(0.005,0.01)
+            player_stats.reduce_sanity(0.005, 0.01)
 
-#Create object of parent class
+
+# Create object of parent class
 managePlayer = playerStatsController()
+
 
 def player_input(keys_pressed):
     '''
@@ -145,7 +158,7 @@ def player_input(keys_pressed):
     global tutorialPassed
 
     if keys_pressed[pygame.K_w] or keys_pressed[pygame.K_a] or keys_pressed[pygame.K_s] or keys_pressed[pygame.K_d]:
-        #if the game is not paused and the user presses W,A,S,D or any of the 4 in combination, call player movement.
+        # if the game is not paused and the user presses W,A,S,D or any of the 4 in combination, call player movement.
         if not gamePaused:
             if keys_pressed[pygame.K_w] and keys_pressed[pygame.K_a]:
                 player_obj.move("up-left")
@@ -177,16 +190,15 @@ def player_input(keys_pressed):
         print("F is pressed")
         tutorialPassed = True
     if keys_pressed[pygame.K_ESCAPE]:
-        #If the escape key is pressed, toggle opening the Menu and Pausing the game
-        #with use of the gameUI object.
+        # If the escape key is pressed, toggle opening the Menu and Pausing the game
+        # with use of the gameUI object.
         if gamePaused == False:
             gamePaused = True
             pygame.time.delay(650)
         else:
             gamePaused = False
             pygame.time.delay(650)
-        
-    
+
     if keys_pressed[pygame.K_e] and last_interaction_counter == 0:
         '''This is the most complex interaction,
         When 'E' is pressed, capture the return command from the nearest
@@ -199,13 +211,13 @@ def player_input(keys_pressed):
         last_interaction_counter = 20
         command_to_do = player_obj.interact_with()
         print(command_to_do)
-        if command_to_do == None:
-            #as said above, if nothing nearby to interact with, let user know with a textbox thanks to gameUI method.
+        if command_to_do is None:
+            # as said above, if nothing nearby to interact with, let user know with a textbox thanks to gameUI method.
             gameUI.quickText("There's nothing to interact with here", delay=100)
         if command_to_do is not None:
-            #if there is a command to do, respond appropriately
+            # if there is a command to do, respond appropriately
             if command_to_do.split(' ')[0] == 'DISPLAY':
-                #if certain text is to be shown: DISPLAY 'xyz abc', then format the text to display appropriately
+                # if certain text is to be shown: DISPLAY 'xyz abc', then format the text to display appropriately
                 # such as stripping out the DISPLAY in DISPLAY 'xyz abc', so player only sees 'xyz abc'
                 gameUI.quickText(' '.join(command_to_do.split(' ')[1:]))
             if command_to_do.split(' ')[0] == 'EXIT':
@@ -214,11 +226,11 @@ def player_input(keys_pressed):
                 print("MOVING TO " + newdungeon)
                 currentDungeon = load_dungeon(newdungeon)
                 currentScene = currentDungeon.head
-                if currentScene.music != None and currentScene.music != '':
+                if currentScene.music is not None and currentScene.music != '':
                     Sound.play_music(currentScene.music)
                 player_obj = currentScene.get_entity('Player0')
                 player_obj.stats = player_stats
-                
+
                 '''sCX and scY are a pair, meant to represent the length of a tile.
                 if we are in a 5x5 room, tiles can be bigger than in a 20x20 room
                 where we'd obviously need to make them smaller to fit the same display size.
@@ -227,66 +239,66 @@ def player_input(keys_pressed):
                 scX = width / currentScene.width
                 scY = height / currentScene.length
                 scale = min(scX, scY)
-                
-                #tempsurf is for optimization, it was observed putting too many sprites on the screen
+
+                # tempsurf is for optimization, it was observed putting too many sprites on the screen
                 # was a big loss for performance. This way, we put all sprites onto tempsurf, and simply
                 # draw tempsurf on the screen at the end. 
                 tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
-                    #the tempsurf optimization is specifically for walls, we put the walls inside it
-                    #and draw tempsurf at the end, aka all walls are drawn in one swift stroke.
+                    # the tempsurf optimization is specifically for walls, we put the walls inside it
+                    # and draw tempsurf at the end, aka all walls are drawn in one swift stroke.
                     if "CollisionEntity" in entity.ID:
-                        #if entity is a wall, don't draw it directly, put it onto tempsurf
-                        coordinateDraw = entity.coord
+                        # if entity is a wall, don't draw it directly, put it onto tempsurf
+                        coordinate_draw = entity.coord
                         sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                         if currentScene.width > currentScene.length:
                             tempsurf.blit(sprite, (
-                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
-                                 coordinateDraw[1] * scale)))
+                                ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                 coordinate_draw[1] * scale)))
                         if currentScene.length > currentScene.width:
                             tempsurf.blit(sprite, (
-                                (coordinateDraw[0] * scale,
-                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                                (coordinate_draw[0] * scale,
+                                 (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                         if currentScene.length == currentScene.width:
                             tempsurf.blit(sprite,
-                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
+                                          (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
             if command_to_do.split(' ')[0] == 'MOVE':
-                #if the interaction command is MOVE xyz, we move the player to a different room
-                #this demonstrates complex coding because this deals with linked lists.
+                # if the interaction command is MOVE xyz, we move the player to a different room
+                # this demonstrates complex coding because this deals with linked lists.
                 print(command_to_do.split(' ')[1])
                 middle_scene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
-                if middle_scene != None:
+                if middle_scene is not None:
                     currentScene = currentScene.linked_rooms[command_to_do.split(' ')[1]]
-                    if currentScene.music != None and currentScene.music != '':
-                        #if the scene has a music track associated with it, play it
+                    if currentScene.music is not None and currentScene.music != '':
+                        # if the scene has a music track associated with it, play it
                         Sound.play_music(currentScene.music)
                     player_obj = currentScene.get_entity('Player0')
                     player_obj.stats = player_stats
                     print(currentScene.ID)
-                    
-                    #When we are in a new scene, we need to recalculate what the tile sizes should be
-                    #in the new scene
-                    scX = width/currentScene.width
-                    scY = height/currentScene.length
-                    scale = min(scX,scY)
+
+                    # When we are in a new scene, we need to recalculate what the tile sizes should be
+                    # in the new scene
+                    scX = width / currentScene.width
+                    scY = height / currentScene.length
+                    scale = min(scX, scY)
                     tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
-                    
-                    # Cache all of the walls inside of a surface
+
+                    # Cache all the walls inside a surface
                     for entity in currentScene.get_all_entities():
                         if "CollisionEntity" in entity.ID:
-                            coordinateDraw = entity.coord
+                            coordinate_draw = entity.coord
                             sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                             if currentScene.width > currentScene.length:
                                 tempsurf.blit(sprite, (
-                                    ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
-                                     coordinateDraw[1] * scale)))
+                                    ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                     coordinate_draw[1] * scale)))
                             if currentScene.length > currentScene.width:
                                 tempsurf.blit(sprite, (
-                                    (coordinateDraw[0] * scale,
-                                     (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                                    (coordinate_draw[0] * scale,
+                                     (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                             if currentScene.length == currentScene.width:
                                 tempsurf.blit(sprite,
-                                              (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
+                                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
 
         pygame.time.delay(100)
     elif keys_pressed[pygame.K_e]:
@@ -294,13 +306,13 @@ def player_input(keys_pressed):
 
 
 def Main():
-    '''
+    """
     With all that set up, we are ready for the main() loop. This houses the while loop
     which will run through the game's calculations, priority of rendering and events each frame.
     This really is where it all comes together.
-    '''
-    #import some prerequisite values as global variables
-    run = True    
+    """
+    # import some prerequisite values as global variables
+    run = True
     global keys_pressed
     global currentDungeon
     global currentScene
@@ -315,31 +327,30 @@ def Main():
     global tutorialPassed
 
     clock = pygame.time.Clock()
-    scX = width/currentScene.width
-    scY = height/currentScene.length
+    scX = width / currentScene.width
+    scY = height / currentScene.length
     scale = scX
 
-    #the command which sets the title of our window to Blizzard, our game name.
+    # the command which sets the title of our window to Blizzard, our game name.
     pygame.display.set_caption("Blizzard")
-    
 
-    # Cache all of the walls inside of a surface
+    # Cache all the walls inside a surface
     for entity in currentScene.get_all_entities():
         if "CollisionEntity" in entity.ID:
-            coordinateDraw = entity.coord
+            coordinate_draw = entity.coord
             sprite = pygame.transform.scale(entity.sprite, (scale, scale))
             if currentScene.width > currentScene.length:
                 tempsurf.blit(sprite, (
-                    ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
-                     coordinateDraw[1] * scale)))
+                    ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                     coordinate_draw[1] * scale)))
             if currentScene.length > currentScene.width:
                 tempsurf.blit(sprite, (
-                    (coordinateDraw[0] * scale,
-                     (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                    (coordinate_draw[0] * scale,
+                     (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
             if currentScene.length == currentScene.width:
                 tempsurf.blit(sprite,
-                              (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-    
+                              (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+
     while run:
         '''
         Here we are, the while loop which goes through everything possible each frame.
@@ -349,8 +360,8 @@ def Main():
             if not tutorialPassed:
                 keys_pressed = pygame.key.get_pressed()
                 player_input(keys_pressed)
-            #only run the game 120 frames a second to prevent physics from going haywire or game running too fast
-            clock.tick(FPS)/1000 
+            # only run the game 120 frames a second to prevent physics from going haywire or game running too fast
+            clock.tick(FPS) / 1000
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -365,7 +376,7 @@ def Main():
                         Visual.screen = "game"
                         Visual.title_container.hide()
                         Visual.player_stats_textbox.show()
-                        if currentScene.music != None and currentScene.music != '':
+                        if currentScene.music is not None and currentScene.music != '':
                             Sound.play_music(currentScene.music)
                         pass
 
@@ -373,7 +384,7 @@ def Main():
                         Visual.screen = "game"
                         Visual.title_container.hide()
                         Visual.player_stats_textbox.show()
-                        if currentScene.music != None and currentScene.music != '':
+                        if currentScene.music is not None and currentScene.music != '':
                             Sound.play_music(currentScene.music)
                         pass
 
@@ -383,16 +394,16 @@ def Main():
             pygame.display.update()
         elif Visual.screen == "game":
             if not player_obj.stats.check_alive():
-                #If the player has died, here we run the logic to Respawn them.
+                # If the player has died, here we run the logic to Respawn them.
                 print("MOVING TO " + dungeonDirectory)
-                
-                #dungeonDirectory will be used to invoke the linked list and set the scene to where
-                #the respawn point is.
+
+                # dungeonDirectory will be used to invoke the linked list and set the scene to where
+                # the respawn point is.
                 currentDungeon = load_dungeon(dungeonDirectory)
                 currentScene = currentDungeon.head
 
-                #-----whenever a scene changes we must call some code again to make sure everything lines up.
-                if currentScene.music != None and currentScene.music != '':
+                # -----whenever a scene changes we must call some code again to make sure everything lines up.
+                if currentScene.music is not None and currentScene.music != '':
                     Sound.play_music(currentScene.music)
                 player_obj = currentScene.get_entity('Player0')
                 player_obj.stats = player_stats
@@ -402,38 +413,38 @@ def Main():
                 tempsurf = pygame.Surface((width, height), flags=pygame.SRCALPHA)
                 for entity in currentScene.get_all_entities():
                     if "CollisionEntity" in entity.ID:
-                        coordinateDraw = entity.coord
+                        coordinate_draw = entity.coord
                         sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                         if currentScene.width > currentScene.length:
                             tempsurf.blit(sprite, (
-                                ((coordinateDraw[0] * scale + (width - (scX * currentScene.length)) / 2),
-                                 coordinateDraw[1] * scale)))
+                                ((coordinate_draw[0] * scale + (width - (scX * currentScene.length)) / 2),
+                                 coordinate_draw[1] * scale)))
                         if currentScene.length > currentScene.width:
                             tempsurf.blit(sprite, (
-                                (coordinateDraw[0] * scale,
-                                 (coordinateDraw[1] * scale + (height - (scY * currentScene.width)) / 2))))
+                                (coordinate_draw[0] * scale,
+                                 (coordinate_draw[1] * scale + (height - (scY * currentScene.width)) / 2))))
                         if currentScene.length == currentScene.width:
                             tempsurf.blit(sprite,
-                                          (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-                #-----scene change code ends above
+                                          (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+                # -----scene change code ends above
             clock.tick(FPS)
-            #keys_pressed is a pygame module, this invokes the complex pygame's get_pressed to get a list of all keys pressed in a certain frame.
-            keys_pressed = pygame.key.get_pressed()  #put this here since player_input wont work if the var isn't defined.
+            # keys_pressed is a pygame module, this invokes the complex pygame's get_pressed to get a list of all keys pressed in a certain frame.
+            keys_pressed = pygame.key.get_pressed()  # put this here since player_input wont work if the var isn't defined.
             for event in pygame.event.get():
-                
+
                 if event.type == pygame.QUIT:
-                    #if pygame gets a QUIT event (player clicking quit), close the game by setting run to false hence breaking the loop.
+                    # if pygame gets a QUIT event (player clicking quit), close the game by setting run to false hence breaking the loop.
                     run = False
 
-            #call the player_input function each frame, with the parameter keys_pressed
+            # call the player_input function each frame, with the parameter keys_pressed
             player_input(keys_pressed)
-            
-            #now we set the priority of our elements in the UI
-            if gamePaused == True:
-                #if game is paused, display the menu on this frame.
+
+            # now we set the priority of our elements in the UI
+            if gamePaused:
+                # if game is paused, display the menu on this frame.
                 gameUI.showMenu()
             else:
-                #if game is not paused, draw the scene, and update all entities as usual
+                # if game is not paused, draw the scene, and update all entities as usual
                 draw_display(currentScene, tempsurf)
                 currentScene.update_all()
             if text_counter == 0 and Visual.drawlabel:
@@ -441,9 +452,11 @@ def Main():
             else:
                 text_counter -= 1
 
-            #call pygame display update, else we don't actually see any changes in the screen
+            # call pygame display update, else we don't actually see any changes in the screen
             pygame.display.update()
-#end of the main() function above, once main() is done running, that means the program has ended.
+
+
+# end of the main() function above, once main() is done running, that means the program has ended.
 
 
 def rotate_center(image, angle):
@@ -455,6 +468,7 @@ def rotate_center(image, angle):
     rot_image = rot_image.subsurface(rot_rect).copy()
     return rot_image
 
+
 def draw_display(scene, tempsurf):
     '''
     This is the function which will deterine what is being drawed to the display that particular frame
@@ -465,60 +479,64 @@ def draw_display(scene, tempsurf):
     global tutorialMenu
     global tutorialPassed
     tempsurf = tempsurf
-    
-    #fill screen with black to remove all leftovers from past frames rendered 
+
+    # fill screen with black to remove all leftovers from past frames rendered
     screen.fill(black)
-    
-    Visual.ui_manager.update(clock.tick(FPS)/1000) #updates information on the ui elements
+
+    Visual.ui_manager.update(clock.tick(FPS) / 1000)  # updates information on the ui elements
     if not tutorialPassed:
-        screen.blit(tutorialMenu, (0,0))
+        screen.blit(tutorialMenu, (0, 0))
     else:
         if Visual.screen == "game":
             Visual.update_stat_display(player_stats.get_stats())
 
-
-            #Y axis is width, X axis is length
-            #first moves +right -left, second moves +down -up. 
+            # Y-axis is width, X axis is length
+            # first moves +right -left, second moves +down -up.
             if scene.width > scene.length:
                 # Vertical rooms
-                screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scX)),((width - (scX * scene.length))/2,0))
+                screen.blit(pygame.transform.scale(scene.background_image, (scene.length * scX, scene.width * scX)),
+                            ((width - (scX * scene.length)) / 2, 0))
             if scene.length > scene.width:
                 # Horizontal rooms
-                screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scY, scene.width * scY)),(0,(height - (scY * scene.width))/2))
+                screen.blit(pygame.transform.scale(scene.background_image, (scene.length * scY, scene.width * scY)),
+                            (0, (height - (scY * scene.width)) / 2))
             if scene.length == scene.width:
-                screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0))
-            #last ones below are (0,0) as a fallback
+                screen.blit(pygame.transform.scale(scene.background_image, (scene.length * scX, scene.width * scY)),
+                            (0, 0))
+            # last ones below are (0,0) as a fallback
             # screen.blit(pygame.transform.scale(scene.background_image,(scene.length * scX, scene.width * scY)),(0, 0)) 
             for entity in scene.get_all_entities():
                 angle = 0
-                coordinateDraw = entity.coord
+                coordinate_draw = entity.coord
                 if 'enemy' in entity.ID.lower():
                     angle = entity.angle_of_sight
                     compx = sin(radians(entity.angle_of_sight))
                     compy = cos(radians(entity.angle_of_sight))
-                    for s in range(entity.stopped_at+1):
-                        x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length))/2)
-                        y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width))/2)
+                    for s in range(entity.stopped_at + 1):
+                        x = (s * compx + entity.coord[0]) * (scale + (width - (scX * scene.length)) / 2)
+                        y = (s * compy + entity.coord[1]) * (scale + (height - (scY * scene.width)) / 2)
                         if entity.hit:
-                            pygame.draw.circle(screen, (255,0,0), (x,y), 3)
+                            pygame.draw.circle(screen, (255, 0, 0), (x, y), 3)
                         elif s:
                             pygame.draw.circle(screen, white, (x, y), 3)
                 if 'CollisionEntity' not in entity.ID:
                     sprite = pygame.transform.scale(entity.sprite, (scale, scale))
                     if scene.width > scene.length:
                         screen.blit(rotate_center(sprite, angle), (
-                        ((coordinateDraw[0] * scale + (width - (scX * scene.length)) / 2), coordinateDraw[1] * scale)))
+                            ((coordinate_draw[0] * scale + (width - (scX * scene.length)) / 2),
+                             coordinate_draw[1] * scale)))
                     if scene.length > scene.width:
                         screen.blit(rotate_center(sprite, angle), (
-                        (coordinateDraw[0] * scale, (coordinateDraw[1] * scale + (height - (scY * scene.width)) / 2))))
+                            (coordinate_draw[0] * scale,
+                             (coordinate_draw[1] * scale + (height - (scY * scene.width)) / 2))))
                     if scene.length == scene.width:
                         screen.blit(rotate_center(sprite, angle),
-                                    (((coordinateDraw[0] * scale, coordinateDraw[1] * scale))))
-            
+                                    (coordinate_draw[0] * scale, coordinate_draw[1] * scale))
+
             screen.blit(tempsurf, (0, 0))
-        Visual.ui_manager.draw_ui(screen) #displays the ui elements
+        Visual.ui_manager.draw_ui(screen)  # displays the ui elements
 
 
-#As everything is attached to Main() in some way or another, the nice thing is, we only need to run Main() and the program is good to go
+# As everything is attached to Main() in some way or another, the nice thing is, we only need to run Main() and the program is good to go
 
 Main()
